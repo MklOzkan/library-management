@@ -1,0 +1,61 @@
+package com.project.librarymanagement.entity.enums;
+
+public enum Categories {
+    // Fiction
+    GENERAL_FICTION,
+    HISTORICAL_FICTION,
+    ROMANCE,
+    MYSTERY,
+    THRILLER,
+    FANTASY,
+    SCIENCE_FICTION,
+    HORROR,
+    LITERARY_FICTION,
+    YOUNG_ADULT,
+    CHILDRENS_FICTION,
+
+    // Non-Fiction
+    BIOGRAPHY,
+    AUTOBIOGRAPHY,
+    MEMOIR,
+    HISTORY,
+    BUSINESS_ECONOMICS,
+    SELF_HELP,
+    HEALTH_FITNESS,
+    COOKING,
+    TRAVEL,
+    TRUE_CRIME,
+    POLITICS,
+    SCIENCE,
+    TECHNOLOGY,
+    ART_PHOTOGRAPHY,
+    MUSIC,
+    RELIGION_SPIRITUALITY,
+    EDUCATION_TEACHING,
+    PARENTING_FAMILIES,
+    CRAFTS_HOBBIES,
+    HOME_GARDEN,
+    SPORTS_RECREATION,
+    NATURE_ENVIRONMENT,
+
+    // Academic
+    TEXTBOOKS,
+    RESEARCH_PUBLICATIONS,
+    SCHOLARLY_ARTICLES,
+
+    // Special Interest
+    GRAPHIC_NOVELS,
+    COMICS,
+    MANGA,
+    POETRY,
+    DRAMA_PLAYS,
+    ANTHOLOGIES,
+    ESSAYS,
+    JOURNALS,
+
+    // Professional and Technical
+    MEDICAL,
+    LEGAL,
+    ENGINEERING,
+    IT_COMPUTER_SCIENCE
+}
