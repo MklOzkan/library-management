@@ -1,7 +1,6 @@
 package com.project.librarymanagement.payload.request.abstracts;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -10,7 +9,6 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class BaseUserRequest extends AbstractUserRequest{
 
     @NotNull(message = "Please enter your password")

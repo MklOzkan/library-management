@@ -1,6 +1,6 @@
 package com.project.librarymanagement.entity.business;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import com.project.librarymanagement.entity.user.User;
 import lombok.AllArgsConstructor;
