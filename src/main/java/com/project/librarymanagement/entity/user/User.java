@@ -26,8 +26,6 @@ public class User {
     private Long id;
     private String firstName;
     private String lastName;
-    @Column(unique = true)
-    private String username;
     @Enumerated(EnumType.STRING)
     private Gender gender;
     private int score;
@@ -54,7 +52,7 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Role> roles;
 
-    @OneToMany(mappedBy = "user")
-    private List<Loan> loans;
+    @OneToOne
+    private Loan loan;
 
 }
