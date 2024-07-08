@@ -87,4 +87,5 @@ public class AuthenticationService {
         User user = methodHelper.loadUserByEmail(email);
         return modelMapper.map(user, UserResponse.class);
     }
+    //notes
 }
