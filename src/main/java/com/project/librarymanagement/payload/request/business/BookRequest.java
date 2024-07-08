@@ -34,7 +34,7 @@ public class BookRequest {
     @Min(1000)
     @Max(9999)
     private Integer publishDate;
-    @NotNull(message = "Category should not be null")
+   // @NotNull(message = "Category should not be null")
     private Category category;
     private File image;
     @NotNull(message = "loanable should not be null")
