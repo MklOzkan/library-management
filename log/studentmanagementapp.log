@@ -1,0 +1,39 @@
+"2024-07-08 11:51:04,410 INFO  [restartedMain] com.project.librarymanagement.LibraryManagementApplication:Starting LibraryManagementApplication using Java 22.0.1 with PID 10056 (C:\Users\tamar\Desktop\Projects\library-management\target\classes started by tamar in C:\Users\tamar\Desktop\Projects\library-management)
+""2024-07-08 11:51:04,414 INFO  [restartedMain] com.project.librarymanagement.LibraryManagementApplication:No active profile set, falling back to 1 default profile: "default"
+""2024-07-08 11:51:04,484 INFO  [restartedMain] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor:Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+""2024-07-08 11:51:04,485 INFO  [restartedMain] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor:For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+""2024-07-08 11:51:06,071 INFO  [restartedMain] org.springframework.data.repository.config.RepositoryConfigurationDelegate:Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+""2024-07-08 11:51:06,154 INFO  [restartedMain] org.springframework.data.repository.config.RepositoryConfigurationDelegate:Finished Spring Data repository scanning in 70 ms. Found 2 JPA repository interfaces.
+""2024-07-08 11:51:07,210 INFO  [restartedMain] org.springframework.boot.web.embedded.tomcat.TomcatWebServer:Tomcat initialized with port 8085 (http)
+""2024-07-08 11:51:07,225 INFO  [restartedMain] org.apache.catalina.core.StandardService:Starting service [Tomcat]
+""2024-07-08 11:51:07,225 INFO  [restartedMain] org.apache.catalina.core.StandardEngine:Starting Servlet engine: [Apache Tomcat/10.1.25]
+""2024-07-08 11:51:07,278 INFO  [restartedMain] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]:Initializing Spring embedded WebApplicationContext
+""2024-07-08 11:51:07,279 INFO  [restartedMain] org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext:Root WebApplicationContext: initialization completed in 2794 ms
+""2024-07-08 11:51:07,666 INFO  [restartedMain] org.hibernate.jpa.internal.util.LogHelper:HHH000204: Processing PersistenceUnitInfo [name: default]
+""2024-07-08 11:51:07,745 INFO  [restartedMain] org.hibernate.Version:HHH000412: Hibernate ORM core version 6.5.2.Final
+""2024-07-08 11:51:07,789 INFO  [restartedMain] org.hibernate.cache.internal.RegionFactoryInitiator:HHH000026: Second-level cache disabled
+""2024-07-08 11:51:08,151 INFO  [restartedMain] org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo:No LoadTimeWeaver setup: ignoring JPA class transformer
+""2024-07-08 11:51:08,182 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource:HikariPool-1 - Starting...
+""2024-07-08 11:51:08,403 INFO  [restartedMain] com.zaxxer.hikari.pool.HikariPool:HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5d88da18
+""2024-07-08 11:51:08,405 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource:HikariPool-1 - Start completed.
+""2024-07-08 11:51:08,451 WARN  [restartedMain] org.hibernate.orm.deprecation:HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+""2024-07-08 11:51:09,779 INFO  [restartedMain] org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator:HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+""2024-07-08 11:51:09,914 WARN  [restartedMain] org.hibernate.engine.jdbc.spi.SqlExceptionHelper:SQL Warning Code: 0, SQLState: 00000
+""2024-07-08 11:51:09,914 WARN  [restartedMain] org.hibernate.engine.jdbc.spi.SqlExceptionHelper:constraint "ukl6y9l07cvggvtp3ld7q0t39h0" of relation "loans_books" does not exist, skipping
+""2024-07-08 11:51:09,920 WARN  [restartedMain] org.hibernate.engine.jdbc.spi.SqlExceptionHelper:SQL Warning Code: 0, SQLState: 00000
+""2024-07-08 11:51:09,920 WARN  [restartedMain] org.hibernate.engine.jdbc.spi.SqlExceptionHelper:constraint "uki6qjjoe560mee5ajdg7v1o6mi" of relation "t_user" does not exist, skipping
+""2024-07-08 11:51:09,924 WARN  [restartedMain] org.hibernate.engine.jdbc.spi.SqlExceptionHelper:SQL Warning Code: 0, SQLState: 00000
+""2024-07-08 11:51:09,924 WARN  [restartedMain] org.hibernate.engine.jdbc.spi.SqlExceptionHelper:constraint "uk7pg3wxd55e553dj2jom9xx2iq" of relation "t_user" does not exist, skipping
+""2024-07-08 11:51:09,929 WARN  [restartedMain] org.hibernate.engine.jdbc.spi.SqlExceptionHelper:SQL Warning Code: 0, SQLState: 00000
+""2024-07-08 11:51:09,929 WARN  [restartedMain] org.hibernate.engine.jdbc.spi.SqlExceptionHelper:constraint "ukjhib4legehrm4yscx9t3lirqi" of relation "t_user" does not exist, skipping
+""2024-07-08 11:51:09,954 INFO  [restartedMain] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean:Initialized JPA EntityManagerFactory for persistence unit 'default'
+""2024-07-08 11:51:10,556 INFO  [restartedMain] org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer:Global AuthenticationManager configured with UserDetailsService bean with name userDetailServiceImpl
+""2024-07-08 11:51:11,062 INFO  [restartedMain] org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver:Exposing 1 endpoint beneath base path '/actuator'
+""2024-07-08 11:51:11,589 INFO  [restartedMain] org.springframework.data.jpa.repository.query.QueryEnhancerFactory:Hibernate is in classpath; If applicable, HQL parser will be used.
+""2024-07-08 11:51:12,071 INFO  [restartedMain] org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer:LiveReload server is running on port 35729
+""2024-07-08 11:51:12,144 INFO  [restartedMain] org.springframework.boot.web.embedded.tomcat.TomcatWebServer:Tomcat started on port 8085 (http) with context path '/'
+""2024-07-08 11:51:12,160 INFO  [restartedMain] com.project.librarymanagement.LibraryManagementApplication:Started LibraryManagementApplication in 8.471 seconds (process running for 10.116)
+""2024-07-08 11:52:05,227 INFO  [SpringApplicationShutdownHook] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean:Closing JPA EntityManagerFactory for persistence unit 'default'
+""2024-07-08 11:52:05,234 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource:HikariPool-1 - Shutdown initiated...
+""2024-07-08 11:52:05,241 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource:HikariPool-1 - Shutdown completed.
+"
