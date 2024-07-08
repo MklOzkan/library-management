@@ -24,8 +24,8 @@ public class BookController {
 
 
     @GetMapping("/{id}")
-    public BookResponse getById(@PathVariable Long id){
-       return bookService.getById(id);
+    public BookResponse getById(@PathVariable Long id) {
+        return bookService.getById(id);
     }
 
 

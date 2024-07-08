@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class BookMapper {
 
-    public Book mapBookRequestToBook(BookRequest bookRequest, Author author, Publisher publisher, Category category){
+    public Book mapBookRequestToBook(BookRequest bookRequest, Author author, Publisher publisher, Category category) {
         return Book.builder()
                 .name(bookRequest.getName())
                 .isbn(bookRequest.getIsbn())
@@ -35,7 +35,7 @@ public class BookMapper {
                 .build();
     }
 
-    public BookResponse mapBookToBookResponse(Book book){
+    public BookResponse mapBookToBookResponse(Book book) {
         return BookResponse.builder()
                 .name(book.getName())
                 .isbn(book.getIsbn())
