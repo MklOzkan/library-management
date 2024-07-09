@@ -21,6 +21,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -58,13 +60,13 @@ public class AuthenticationService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
-        String userRole = roles.stream().findFirst().get();
+        List<String> userRoles = new ArrayList<>(roles);
 
         //different way of using builder design pattern
         AuthResponse.AuthResponseBuilder responseBuilder = AuthResponse.builder();
         responseBuilder.token(token);
         responseBuilder.email(email);
-        responseBuilder.role(userRole);
+        responseBuilder.role(userRoles);
         responseBuilder.name(userDetails.getName());
         return responseBuilder.build();
     }
