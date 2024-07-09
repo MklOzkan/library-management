@@ -25,8 +25,8 @@ public class MethodHelper {
         return user;
     }
 
-    public void checkBuildIn(User user){
-        if(user.getBuiltIn()){
+    public void checkBuildIn(User user) {
+        if (user.getBuiltIn()) {
             throw new BadRequestException("You do not have any permission to do this operation");
         }
     }
