@@ -1,6 +1,14 @@
 package com.project.librarymanagement.payload.messages;
 
 public class SuccessMessages {
+<<<<<<< HEAD
     //Book
     public static final String BOOK_SAVE = "Book is Saved Successfully";
+=======
+    //Author
+    public static final String AUTHOR_SAVE = "Author is Saved";
+    public static final String AUTHOR_UPDATE = "Author is Updated Successfully";
+    public static final String AUTHOR_DELETE = "Author is Deleted Successfully";
+    public static final String AUTHOR_FOUND = "Author is Found Successfully";
+>>>>>>> main
 }

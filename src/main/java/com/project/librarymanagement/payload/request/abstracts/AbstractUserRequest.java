@@ -25,11 +25,6 @@ public abstract class AbstractUserRequest {
     @Pattern(regexp = "\\A(?!\\s*\\Z).+", message = "Your name must consist of the characters .")
     private String lastName;
 
-    @NotNull(message = "Please enter your username")
-    @Size(min = 4, max = 16,message = "Your username should be at least 4 chars")
-    @Pattern(regexp = "\\A(?!\\s*\\Z).+", message = "Your username must consist of the characters .")
-    private String username;
-
     @NotNull(message = "Please enter your gender")
     private Gender gender;
 
