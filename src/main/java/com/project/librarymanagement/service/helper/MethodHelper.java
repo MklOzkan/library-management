@@ -1,10 +1,12 @@
 package com.project.librarymanagement.service.helper;
 
+import com.project.librarymanagement.entity.business.Author;
 import com.project.librarymanagement.entity.business.Book;
 import com.project.librarymanagement.entity.user.User;
 import com.project.librarymanagement.exception.BadRequestException;
 import com.project.librarymanagement.exception.ResourceNotFoundException;
 import com.project.librarymanagement.payload.messages.ErrorMessages;
+import com.project.librarymanagement.repository.business.AuthorRepository;
 import com.project.librarymanagement.repository.business.BookRepository;
 import com.project.librarymanagement.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ public class MethodHelper {
 
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
 
     public User loadUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
@@ -35,4 +38,10 @@ public class MethodHelper {
         return bookRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_BOOK_MESSAGE, id)));
     }
+
+public Author isAuthorExist(Long id){
+        return authorRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_AUTHOR_MESSAGE,id)));
+}
+
 }
