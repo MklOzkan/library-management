@@ -10,6 +10,8 @@ import com.project.librarymanagement.repository.business.AuthorRepository;
 import com.project.librarymanagement.service.helper.MethodHelper;
 import com.project.librarymanagement.service.helper.PageableHelper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,49 @@ public class AuthorService {
     }
 
 
+    public Page<AuthorResponse> findAuthorsByPage(int page, int size, String sort, String type) {
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
+        return authorRepository.findAll(pageable)
+                .map(authorMapper::mapAuthorToAuthorResponse);
+    }
+
+
+    public ResponseMessage<AuthorResponse> updateAuthor(Long id, AuthorRequest authorRequest) {
+        //validate if author exists
+     methodHelper.isAuthorExist(id);
+        // Update the existing author entity
+        Author updatedAuthor = authorMapper.mapAuthorRequestToAuthor(authorRequest);
+        updatedAuthor.setId(id);
+        // Save the updated author
+        Author savedAuthor = authorRepository.save(updatedAuthor);
+        //map from entity to DTO
+        return ResponseMessage.<AuthorResponse>builder()
+                .message(SuccessMessages.AUTHOR_UPDATE)
+                .returnBody(authorMapper.mapAuthorToAuthorResponse(savedAuthor))
+                .httpStatus(HttpStatus.OK)
+                .build();
+    }
+
+
+    public ResponseMessage deleteAuthorById(Long id) {
+        methodHelper.isAuthorExist(id);
+        authorRepository.deleteById(id);
+        return ResponseMessage.builder()
+                .message(SuccessMessages.AUTHOR_DELETE)
+                .httpStatus(HttpStatus.OK)
+                .build();
+    }
+
+
+    public AuthorResponse findAuthorById(Long id) {
+        Author author=methodHelper.isAuthorExist(id);
+        return authorMapper.mapAuthorToAuthorResponse(author);
+    }
+
 
 }
+
+
+
+
 
