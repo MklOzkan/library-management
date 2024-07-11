@@ -5,11 +5,14 @@ import com.project.librarymanagement.entity.business.Book;
 import com.project.librarymanagement.entity.business.Category;
 import com.project.librarymanagement.entity.business.Publisher;
 import com.project.librarymanagement.payload.request.business.BookRequest;
+import com.project.librarymanagement.payload.request.business.BookUpdateRequest;
 import com.project.librarymanagement.payload.response.business.BookResponse;
 
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 
 
 @Data
@@ -55,6 +58,27 @@ public class BookMapper {
 
 
     }
+
+    public Book mapBookUpdateRequestToBook(BookUpdateRequest bookUpdateRequest, Long bookId, Author author, Publisher publisher, Category category){
+        return Book.builder()
+                .id(bookId)
+                .name(bookUpdateRequest.getName())
+                .isbn(bookUpdateRequest.getIsbn())
+                .pageCount(bookUpdateRequest.getPageCount())
+                .author(author)
+                .publisher(publisher)
+                .category(category)
+                .publishDate(bookUpdateRequest.getPublishDate())
+                .image(bookUpdateRequest.getImage())
+                .shelfCode(bookUpdateRequest.getShelfCode())
+                .active(bookUpdateRequest.getActive())
+                .featured(bookUpdateRequest.getFeatured())
+                .build();
+
+
+
+    }
 }
+
 
 
