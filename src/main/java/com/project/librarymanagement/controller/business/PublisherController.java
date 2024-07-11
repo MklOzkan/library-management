@@ -3,6 +3,7 @@ package com.project.librarymanagement.controller.business;
 import com.project.librarymanagement.payload.request.business.PublisherRequest;
 import com.project.librarymanagement.payload.response.business.PublisherResponse;
 import com.project.librarymanagement.service.business.PublisherService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class PublisherController {
     }
 
     @PostMapping
-    public PublisherResponse createPublisher(@RequestBody PublisherRequest publisherRequest) {
+    public PublisherResponse createPublisher(@RequestBody @Valid PublisherRequest publisherRequest) {
         return publisherService.createPublisher(publisherRequest);
     }
 

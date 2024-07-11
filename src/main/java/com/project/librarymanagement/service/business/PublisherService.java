@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,12 +34,7 @@ public class PublisherService {
     }
 
     public PublisherResponse getById(Long id) {
-        Optional<Publisher> publisherOptional = publisherRepository.findById(id);
-        if (publisherOptional.isPresent()) {
-            Publisher publisher = publisherOptional.get();
-            return publisherMapper.mapPublisherToPublisherResponse(publisher);
-        }
-        // not completed yet
-        return null;
+        Publisher publisher = methodHelper.getPublisherById(id);
+        return publisherMapper.mapPublisherToPublisherResponse(publisher);
     }
 }
