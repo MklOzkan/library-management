@@ -13,14 +13,14 @@ public class PageableHelper {
     public Pageable getPageableWithProperties(
             int page, int size,String sort,String type){
         Pageable pageable = PageRequest.of(page,size, Sort.by(sort).ascending());
-        if(Objects.equals(type,"asc")){
-            pageable = PageRequest.of(page,size, Sort.by(sort).ascending());
+        if(Objects.equals(type,"desc")){
+            pageable = PageRequest.of(page,size, Sort.by(sort).descending());
         }
         return pageable;
     }
 
     public Pageable getPageableWithProperties(int page, int size){
-        return PageRequest.of(page, size,Sort.by("Id").ascending());
+        return PageRequest.of(page, size,Sort.by("Id").descending());
     }
 
 }
