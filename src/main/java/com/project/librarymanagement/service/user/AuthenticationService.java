@@ -1,7 +1,9 @@
 package com.project.librarymanagement.service.user;
 
+import com.project.librarymanagement.entity.user.Role;
 import com.project.librarymanagement.entity.user.User;
 import com.project.librarymanagement.exception.BadRequestException;
+import com.project.librarymanagement.payload.mapper.UserMapper;
 import com.project.librarymanagement.payload.request.authentication.LoginRequest;
 import com.project.librarymanagement.payload.request.authentication.UpdatePasswordRequest;
 import com.project.librarymanagement.payload.response.authentication.AuthResponse;
@@ -35,12 +37,13 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final MethodHelper methodHelper;
-    private final ModelMapper modelMapper;
+    private final UserMapper userMapper;
 
 
     public AuthResponse authenticateUser(LoginRequest request) {
         String email = request.getEmail();
         String password = request.getPassword();
+        String roleToLogin = request.getRoleToLogin();
 
         //injection of spring security authentication in service layer
         Authentication authentication =
@@ -55,30 +58,45 @@ public class AuthenticationService {
         //get all info for user
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
+        User user = methodHelper.loadUserByEmail(email);
+        if (roleToLogin !=null&&!roleToLogin.isEmpty()) {
+            Role role = methodHelper.findRoleByName(roleToLogin);
+            if (!user.getRoles().contains(role)) {
+                throw new RuntimeException("User does not have the target role");
+            }
+            user.setActiveRole(roleToLogin);
+            userRepository.save(user);
+            userDetails.setActiveRole(user.getActiveRole());
+        }else {
+            userDetails.setActiveRole(user.getActiveRole());
+        }
+
         Set<String> roles = userDetails.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
-        List<String> userRoles = new ArrayList<>(roles);
+        //List<String> rolesList = roles.stream().toList();
+        String userRole = roles.stream().findFirst().get();
 
         //different way of using builder design pattern
         AuthResponse.AuthResponseBuilder responseBuilder = AuthResponse.builder();
         responseBuilder.token(token);
         responseBuilder.email(email);
-        responseBuilder.role(userRoles);
+        //responseBuilder.role(rolesList);
+        responseBuilder.role(userDetails.getActiveRole());
         responseBuilder.name(userDetails.getName());
         return responseBuilder.build();
     }
 
     public void updatePassword(UpdatePasswordRequest updatePasswordRequest,
                                HttpServletRequest request) {
-        String email = (String) request.getAttribute("email");
+        String email = (String) request.getAttribute("username");
         User user = userRepository.findByEmail(email);
         methodHelper.checkBuildIn(user);
         //validate old password is correct
         if(passwordEncoder.matches(updatePasswordRequest.getNewPassword(),user.getPassword())){
-            throw new BadRequestException("Passwords are not matched");
+            throw new BadRequestException("Your passwords are not matched");
         }
         user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
         userRepository.save(user);
@@ -87,7 +105,6 @@ public class AuthenticationService {
     public UserResponse findByEmail(HttpServletRequest httpServletRequest) {
         String email = (String) httpServletRequest.getAttribute("email");
         User user = methodHelper.loadUserByEmail(email);
-        return modelMapper.map(user, UserResponse.class);
+        return userMapper.mapUserToUserResponse(user);
     }
-    //notes
 }

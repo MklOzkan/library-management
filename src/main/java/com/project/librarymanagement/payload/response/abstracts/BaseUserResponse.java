@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -24,7 +25,7 @@ public abstract class BaseUserResponse {
   private String phoneNumber;
   private Gender gender;
   private String email;
-  private String role;
+  private List<String> roles;
   private Loan loan;
 
 }

@@ -28,14 +28,15 @@ public class UserDetailsImpl implements UserDetails {
 
     private List<GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String email, String name, String password, String role) {
+    private String activeRole;//this is added to switch roles
+
+    public UserDetailsImpl(Long id, String email, String name, String password, List<GrantedAuthority> authorities, String role,String activeRole) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.password = password;
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(role));
         this.authorities = authorities;
+        this.activeRole = activeRole;
     }
     @Override
     public String getUsername() {
