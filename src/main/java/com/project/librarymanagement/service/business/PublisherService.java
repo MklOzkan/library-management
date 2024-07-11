@@ -40,7 +40,7 @@ public class PublisherService {
             Publisher publisher = publisherOptional.get();
             return publisherMapper.mapPublisherToPublisherResponse(publisher);
         }
-
+        // not completed yet
         return null;
     }
 }
