@@ -79,6 +79,7 @@ public class LibraryManagementApplication implements CommandLineRunner {
         userRequest.setPhoneNumber("111-111-1111");
         userRequest.setEmail("admin@gmail.com");
         userRequest.setGender(Gender.MALE);
+        userRequest.setBuildIn(true);
         return userRequest;
     }
 

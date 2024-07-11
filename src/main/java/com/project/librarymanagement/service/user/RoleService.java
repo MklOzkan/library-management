@@ -22,7 +22,10 @@ public class RoleService {
             throw new ResourceNotFoundException("Role not found");
         }
         return roles;
+    }
 
+    public List<Role> getAllRoles(){
+        return roleRepository.findAll();
     }
 
 }
