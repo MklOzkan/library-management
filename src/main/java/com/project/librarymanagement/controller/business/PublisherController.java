@@ -1,11 +1,10 @@
 package com.project.librarymanagement.controller.business;
 
+import com.project.librarymanagement.payload.request.business.PublisherRequest;
 import com.project.librarymanagement.payload.response.business.PublisherResponse;
 import com.project.librarymanagement.service.business.PublisherService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,8 +16,18 @@ public class PublisherController {
     private final PublisherService publisherService;
 
     @GetMapping
-    public List<PublisherResponse> getAllPublishers() {
+    public List<PublisherResponse> getAll() {
         return publisherService.getAllPublishers();
+    }
+
+    @GetMapping ("/{id}")
+    public PublisherResponse getById(@PathVariable Long id) {
+        return publisherService.getById(id);
+    }
+
+    @PostMapping
+    public PublisherResponse createPublisher(@RequestBody PublisherRequest publisherRequest) {
+        return publisherService.createPublisher(publisherRequest);
     }
 
 }
