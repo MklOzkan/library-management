@@ -61,8 +61,14 @@ public class AuthorService {
     }
 
 
-
-
+    public ResponseMessage deleteAuthorById(Long id) {
+        methodHelper.isAuthorExist(id);
+        authorRepository.deleteById(id);
+        return ResponseMessage.builder()
+                .message(SuccessMessages.AUTHOR_DELETE)
+                .httpStatus(HttpStatus.OK)
+                .build();
+    }
 
 
 

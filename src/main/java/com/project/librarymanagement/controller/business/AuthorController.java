@@ -34,10 +34,16 @@ public class AuthorController {
     }
 
     @PreAuthorize("hasAnyAuthority('Admin')")
-    @PutMapping("/update/{id}")
+    @PutMapping("/update/{authorId}")
     public ResponseMessage<AuthorResponse>updateAuthorById(@PathVariable Long id,
                                                           @RequestBody @Valid AuthorRequest authorRequest){
         return authorService.updateAuthor(id,authorRequest);
+    }
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @DeleteMapping("/delete/{authorId}")
+    public ResponseMessage deleteAuthorById(@PathVariable Long id) {
+
+        return authorService.deleteAuthorById(id);
     }
 
 }
