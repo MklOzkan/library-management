@@ -45,5 +45,10 @@ public class AuthorController {
 
         return authorService.deleteAuthorById(id);
     }
+    @GetMapping("/{id}")
+    public AuthorResponse getAuthorById(@PathVariable Long id){
+        return authorService.findAuthorById(id);
+    }
+
 
 }

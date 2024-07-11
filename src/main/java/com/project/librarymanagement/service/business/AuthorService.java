@@ -71,6 +71,10 @@ public class AuthorService {
     }
 
 
+    public AuthorResponse findAuthorById(Long id) {
+        Author author=methodHelper.isAuthorExist(id);
+        return authorMapper.mapAuthorToAuthorResponse(author);
+    }
 
 
 }
