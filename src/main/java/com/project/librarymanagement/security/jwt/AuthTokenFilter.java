@@ -40,7 +40,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             // 2- validate JWT
             if(jwt !=null && jwtUtils.validateToken(jwt)){
                 // 3- we need username for to get the data
-                String email = jwtUtils.getUsernameFromToken(jwt);
+                String email = jwtUtils.getEmailFromToken(jwt);
                 // 4- check DB and find the user and upgrade it to UserDetails
                 UserDetails userDetails = userDetailService.loadUserByUsername(email);
                 // 5- we are setting attribute prop username
