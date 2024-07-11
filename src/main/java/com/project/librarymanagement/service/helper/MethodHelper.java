@@ -21,6 +21,7 @@ public class MethodHelper {
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
+    private final PublisherRepository publisherRepository;
 
     public User loadUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
@@ -45,5 +46,18 @@ public Author isAuthorExist(Long id){
         return authorRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_AUTHOR_MESSAGE,id)));
 }
+
+    public Publisher getPublisherById(Long id){
+        return publisherRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_PUBLISHER_MESSAGE,id)));
+    }
+
+    public boolean isPublisherExist(Long id) {
+        if (publisherRepository.findById(id).isEmpty()) {
+            throw new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_PUBLISHER_MESSAGE,id));
+        }
+
+        return true;
+    }
 
 }
