@@ -37,4 +37,15 @@ public class PublisherService {
         Publisher publisher = methodHelper.getPublisherById(id);
         return publisherMapper.mapPublisherToPublisherResponse(publisher);
     }
+
+    public PublisherResponse updatePublisher(Long id, PublisherRequest publisherRequest) {
+        Publisher publisher = methodHelper.getPublisherById(id);
+        publisher.setName(publisherRequest.getName());
+        Publisher updatedPublisher = publisherRepository.save(publisher);
+        return publisherMapper.mapPublisherToPublisherResponse(updatedPublisher);
+    }
+
+    public void deletePublisher(Long id) {
+        publisherRepository.deleteById(id);
+    }
 }

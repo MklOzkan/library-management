@@ -31,4 +31,14 @@ public class PublisherController {
         return publisherService.createPublisher(publisherRequest);
     }
 
+    @PutMapping ("/{id}")
+    public PublisherResponse updatePublisher(@PathVariable Long id, @RequestBody @Valid PublisherRequest publisherRequest) {
+        return publisherService.updatePublisher(id, publisherRequest);
+    }
+
+    @DeleteMapping ("/{id}")
+    public void deleteUser(@PathVariable @Valid Long id) {
+        publisherService.deletePublisher(id);
+    }
+
 }
