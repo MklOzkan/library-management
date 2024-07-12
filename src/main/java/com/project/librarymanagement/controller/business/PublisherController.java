@@ -28,7 +28,7 @@ public class PublisherController {
     }
 
     @PostMapping
-    public PublisherResponse createPublisher(@RequestBody @Valid PublisherRequest publisherRequest) {
+    public ResponseMessage<PublisherResponse> createPublisher(@RequestBody @Valid PublisherRequest publisherRequest) {
         return publisherService.createPublisher(publisherRequest);
     }
 
