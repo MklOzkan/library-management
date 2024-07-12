@@ -2,8 +2,10 @@ package com.project.librarymanagement.service.business;
 
 import com.project.librarymanagement.entity.business.Publisher;
 import com.project.librarymanagement.payload.mapper.PublisherMapper;
+import com.project.librarymanagement.payload.messages.SuccessMessages;
 import com.project.librarymanagement.payload.request.business.PublisherRequest;
 import com.project.librarymanagement.payload.response.business.PublisherResponse;
+import com.project.librarymanagement.payload.response.business.ResponseMessage;
 import com.project.librarymanagement.repository.business.PublisherRepository;
 import com.project.librarymanagement.service.helper.MethodHelper;
 import lombok.RequiredArgsConstructor;
@@ -27,25 +29,39 @@ public class PublisherService {
                 .stream().map(publisherMapper :: mapPublisherToPublisherResponse).collect(Collectors.toList());
     }
 
-    public PublisherResponse createPublisher(PublisherRequest publisherRequest) {
+    public ResponseMessage<PublisherResponse> createPublisher(PublisherRequest publisherRequest) {
         Publisher publisher = publisherMapper.mapPublisherRequestToPublisher(publisherRequest);
         Publisher savedPublisher = publisherRepository.save(publisher);
-        return publisherMapper.mapPublisherToPublisherResponse(savedPublisher);
+        return ResponseMessage.<PublisherResponse>builder()
+                .message(SuccessMessages.PUBLISHER_SAVE)
+                .returnBody(publisherMapper.mapPublisherToPublisherResponse(savedPublisher))
+                .build();
     }
 
-    public PublisherResponse getById(Long id) {
+    public ResponseMessage<PublisherResponse> getById(Long id) {
         Publisher publisher = methodHelper.getPublisherById(id);
-        return publisherMapper.mapPublisherToPublisherResponse(publisher);
+        return ResponseMessage.<PublisherResponse>builder()
+                .message(SuccessMessages.PUBLISHER_FOUND)
+                .returnBody(publisherMapper.mapPublisherToPublisherResponse(publisher))
+                .build();
     }
 
-    public PublisherResponse updatePublisher(Long id, PublisherRequest publisherRequest) {
+    public ResponseMessage<PublisherResponse> updatePublisher(Long id, PublisherRequest publisherRequest) {
         Publisher publisher = methodHelper.getPublisherById(id);
         publisher.setName(publisherRequest.getName());
         Publisher updatedPublisher = publisherRepository.save(publisher);
-        return publisherMapper.mapPublisherToPublisherResponse(updatedPublisher);
+        return ResponseMessage.<PublisherResponse>builder()
+                .message(SuccessMessages.PUBLISHER_UPDATE)
+                .returnBody(publisherMapper.mapPublisherToPublisherResponse(updatedPublisher))
+                .build();
     }
 
-    public void deletePublisher(Long id) {
+    public ResponseMessage<Object> deletePublisher(Long id) {
+        Object publisher = methodHelper.isPublisherExist(id);
         publisherRepository.deleteById(id);
+        return ResponseMessage.<Object>builder()
+                    .message(SuccessMessages.PUBLISHER_DELETE)
+                    .returnBody(publisher)
+                    .build();
     }
 }

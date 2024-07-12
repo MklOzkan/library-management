@@ -14,4 +14,10 @@ public class SuccessMessages {
     public static final String AUTHOR_DELETE = "Author is Deleted Successfully";
     public static final String AUTHOR_FOUND = "Author is Found Successfully";
 
+    // Publisher
+    public static final String PUBLISHER_SAVE = "Publisher is Saved";
+    public static final String PUBLISHER_UPDATE = "Publisher is Updated Successfully";
+    public static final String PUBLISHER_DELETE = "Publisher is Deleted Successfully";
+    public static final String PUBLISHER_FOUND = "Publisher is Found Successfully";
+
 }
