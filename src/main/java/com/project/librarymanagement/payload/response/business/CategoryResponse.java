@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryResponse {
     private Long id;
-    private Categories categoryName;
+    private String name;
 
     private Boolean builtIn;
 

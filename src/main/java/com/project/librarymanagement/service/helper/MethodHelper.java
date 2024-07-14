@@ -2,6 +2,7 @@ package com.project.librarymanagement.service.helper;
 
 import com.project.librarymanagement.entity.business.Author;
 import com.project.librarymanagement.entity.business.Book;
+import com.project.librarymanagement.entity.business.Category;
 import com.project.librarymanagement.entity.business.Publisher;
 import com.project.librarymanagement.entity.enums.RoleType;
 import com.project.librarymanagement.entity.user.Role;
@@ -11,6 +12,7 @@ import com.project.librarymanagement.exception.ResourceNotFoundException;
 import com.project.librarymanagement.payload.messages.ErrorMessages;
 import com.project.librarymanagement.repository.business.AuthorRepository;
 import com.project.librarymanagement.repository.business.BookRepository;
+import com.project.librarymanagement.repository.business.CategoryRepository;
 import com.project.librarymanagement.repository.business.PublisherRepository;
 import com.project.librarymanagement.repository.user.RoleRepository;
 import com.project.librarymanagement.repository.user.UserRepository;
@@ -28,6 +30,7 @@ public class MethodHelper {
     private final AuthorRepository authorRepository;
     private final PublisherRepository publisherRepository;
     private final RoleRepository roleRepository;
+    private final CategoryRepository categoryRepository;
 
     public User loadUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
@@ -85,6 +88,21 @@ public Author isAuthorExist(Long id){
     public void isPublisherExistByName(String name) {
         if (!publisherRepository.existsByName(name)) {
             throw new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_PUBLISHER_MESSAGE_NAME, name));
+        }
+    }
+
+    public List<Book> findBooksByIds(List<Long> ids) {
+        return bookRepository.findAllById(ids);
+    }
+
+    public Category isCategoryExist(Long id){
+        return categoryRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_CATEGORY_MESSAGE,id)));
+    }
+
+    public void isCategoryExistByName(String name){
+        if (categoryRepository.existsByName(name)) {
+            throw new BadRequestException(String.format(ErrorMessages.NOT_FOUND_CATEGORY_MESSAGE_BY_NAME, name));
         }
     }
 

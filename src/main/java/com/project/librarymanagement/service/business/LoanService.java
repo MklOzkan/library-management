@@ -94,7 +94,7 @@ public class LoanService {
 
     private void checkIfBookIsAvailable(List<Long> bookIds) {
         for (Long bookId: bookIds) {
-            Book book = methodHelper.findBookById(bookId);
+            Book book = methodHelper.isBookExist(bookId);
             if (book.getBuiltIn()) {
                 throw new BadRequestException("Book is not available");
             }

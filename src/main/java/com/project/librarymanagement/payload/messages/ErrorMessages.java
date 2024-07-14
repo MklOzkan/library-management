@@ -19,8 +19,6 @@ public class ErrorMessages {
     public static final String NOT_FOUND_LOAN_BY_USER_MESSAGE = "Error: Loan with user id %s not found";
     public static final String NOT_FOUND_LOAN_BY_BOOK_MESSAGE = "Error: Loan with book id %s not found";
     public static final String CANNOT_HAVE_MORE_BOOKS = "Error: User with id %s cannot have more than %s books";
-
-    // Publisher
-
-    public static final String ALREADY_EXISTS_PUBLISHER = "Error: Publisher with id  %s already exists";
+    public static final String NOT_FOUND_CATEGORY_MESSAGE = "Error: Category with id %s not found";
+    public static final String NOT_FOUND_CATEGORY_MESSAGE_BY_NAME = "Error: Category with name %s not found";
 }
