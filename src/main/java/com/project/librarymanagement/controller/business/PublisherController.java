@@ -17,6 +17,7 @@ public class PublisherController {
 
     private final PublisherService publisherService;
 
+    //TODO: Pageable
     @GetMapping
     public List<PublisherResponse> getAll() {
         return publisherService.getAllPublishers();
