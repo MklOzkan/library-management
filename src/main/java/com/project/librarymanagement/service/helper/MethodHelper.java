@@ -82,4 +82,10 @@ public Author isAuthorExist(Long id){
         return true;
     }
 
+    public void isPublisherExistByName(String name) {
+        if (!publisherRepository.existsByName(name)) {
+            throw new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_PUBLISHER_MESSAGE_NAME, name));
+        }
+    }
+
 }
