@@ -1,6 +1,8 @@
 package com.project.librarymanagement.controller.user;
 
 import com.project.librarymanagement.payload.request.user.UserRequest;
+import com.project.librarymanagement.payload.request.user.UserRequestWithoutPassword;
+import com.project.librarymanagement.payload.response.business.ResponseMessage;
 import com.project.librarymanagement.payload.response.user.UserResponse;
 import com.project.librarymanagement.service.user.UserService;
 import jakarta.validation.Valid;
@@ -46,5 +48,19 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('Admin','Employee')")
     public ResponseEntity<UserResponse>getUserById(@PathVariable Long id){
         return ResponseEntity.ok(userService.findUserById(id));
+    }
+
+    //4. delete user via id
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('Admin','Employee')")
+    public ResponseMessage<String>deleteUserById(@PathVariable Long id){
+        return userService.deleteUserById(id);
+    }
+
+    //5. update user via id
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('Admin','Employee')")
+    public ResponseEntity<UserResponse>updateUserById(@RequestBody @Valid UserRequestWithoutPassword userRequest, @PathVariable Long id){
+        return ResponseEntity.ok(userService.updateUserById(userRequest, id));
     }
 }

@@ -5,6 +5,7 @@ import com.project.librarymanagement.entity.user.Role;
 import com.project.librarymanagement.entity.user.User;
 import com.project.librarymanagement.exception.ResourceNotFoundException;
 import com.project.librarymanagement.payload.request.abstracts.BaseUserRequest;
+import com.project.librarymanagement.payload.request.user.UserRequestWithoutPassword;
 import com.project.librarymanagement.payload.response.user.UserResponse;
 import com.project.librarymanagement.service.user.RoleService;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +65,21 @@ public class UserMapper {
                 .address(user.getAddress())
                 .email(user.getEmail())
                 .roles(user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toList()))
+                .build();
+    }
+
+
+    //UserRequestWithoutPassword -> Entity
+    public User mapUserRequestWithoutPasswordToUser(UserRequestWithoutPassword userRequestWithoutPassword){
+        return User.builder()
+                .firstName(userRequestWithoutPassword.getFirstName())
+                .lastName(userRequestWithoutPassword.getLastName())
+                .gender(userRequestWithoutPassword.getGender())
+                .score(userRequestWithoutPassword.getScore())
+                .address(userRequestWithoutPassword.getAddress())
+                .phoneNumber(userRequestWithoutPassword.getPhoneNumber())
+                .birthDate(userRequestWithoutPassword.getBirthDate())
+                .email(userRequestWithoutPassword.getEmail())
                 .build();
     }
 }
