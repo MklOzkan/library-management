@@ -16,33 +16,28 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
-  
+
   private final AuthenticationService authenticationService;
-  
+
   @PostMapping("/login")
   public ResponseEntity<AuthResponse>authenticateUser(
-      @RequestBody @Valid LoginRequest request) {
+          @RequestBody @Valid LoginRequest request) {
     return ResponseEntity.ok(authenticationService.authenticateUser(request));
   }
 
   /**
    * Any logged-in user can update her/his password
    */
-  @PreAuthorize("hasAnyAuthority('Admin','Dean','ViceDean','Teacher','Student')")
+  @PreAuthorize("hasAnyAuthority('Admin','Employee','Member')")
   @PatchMapping("/updatePassword")
   public ResponseEntity<String>updatePassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest, HttpServletRequest request){
     authenticationService.updatePassword(updatePasswordRequest,request);
-    return ResponseEntity.ok("Password Changed Successfully");
+    return ResponseEntity.ok("Password Successfully Changed");
   }
 
-
-  @PreAuthorize("hasAnyAuthority('Admin','Dean','ViceDean','Teacher','Student')")
+  @PreAuthorize("hasAnyAuthority('Admin','Employee','Member')")
   @GetMapping("/user")
-  public ResponseEntity<UserResponse>findByUserName(HttpServletRequest httpServletRequest){
+  public ResponseEntity<UserResponse> findByEmail(HttpServletRequest httpServletRequest){
     return ResponseEntity.ok(authenticationService.findByEmail(httpServletRequest));
   }
-  
-  
-  
-
 }

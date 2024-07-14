@@ -7,4 +7,6 @@ public class ErrorMessages {
     //author
 
     public static final String NOT_FOUND_AUTHOR_MESSAGE = "Error: Author with id %s not found";
+
+    public static final String NOT_FOUND_PUBLISHER_MESSAGE = "Error: Publisher with id %s not found";
 }

@@ -37,14 +37,15 @@ public class User {
     private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+3")
-    private LocalDateTime createDate = LocalDateTime.now();
+    private String activeRole;//this is added to switch roles
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "US/Eastern")
+    private LocalDateTime createDate;
 
     private Boolean active;
 
     private Boolean builtIn;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "userId"),
@@ -54,5 +55,10 @@ public class User {
 
     @OneToOne
     private Loan loan;
+
+    @PrePersist
+    public void prePersist() {
+        createDate = LocalDateTime.now();
+    }
 
 }

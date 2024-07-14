@@ -7,13 +7,9 @@ import com.project.librarymanagement.payload.request.user.UserRequest;
 import com.project.librarymanagement.repository.user.RoleRepository;
 import com.project.librarymanagement.service.user.RoleService;
 import com.project.librarymanagement.service.user.UserService;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.config.Configuration;
-import org.modelmapper.convention.NamingConventions;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
 
@@ -32,16 +28,6 @@ public class LibraryManagementApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
         SpringApplication.run(LibraryManagementApplication.class, args);
-    }
-
-    @Bean
-    public ModelMapper modelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration()
-                .setFieldMatchingEnabled(true)
-                .setFieldAccessLevel(Configuration.AccessLevel.PRIVATE)
-                .setSourceNamingConvention(NamingConventions.JAVABEANS_MUTATOR);
-        return modelMapper;
     }
 
     @Override
@@ -79,6 +65,7 @@ public class LibraryManagementApplication implements CommandLineRunner {
         userRequest.setPhoneNumber("111-111-1111");
         userRequest.setEmail("admin@gmail.com");
         userRequest.setGender(Gender.MALE);
+        userRequest.setBuildIn(true);
         return userRequest;
     }
 

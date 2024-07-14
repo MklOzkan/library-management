@@ -6,10 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
     @Query("SELECT r FROM Role r WHERE r.roleType = ?1")
-    Optional<Role> findByEnumRoleEquals(RoleType roleType);
+    List<Role> findByEnumRoleEquals(RoleType roleType);
+
+    Optional<Role> findByRoleName(String roleName);
 }

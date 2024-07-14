@@ -16,12 +16,16 @@ public class RoleService {
 
     private final RoleRepository roleRepository;
 
-    public Role getRole(RoleType roleType){
-        return roleRepository.findByEnumRoleEquals(roleType)
-                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+    public List<Role> getRole(RoleType roleType){
+        List<Role> roles = roleRepository.findByEnumRoleEquals(roleType);
+        if (roles.isEmpty()){
+            throw new ResourceNotFoundException("Role not found");
+        }
+        return roles;
     }
 
     public List<Role> getAllRoles(){
         return roleRepository.findAll();
     }
+
 }
