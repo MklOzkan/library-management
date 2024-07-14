@@ -1,30 +1,23 @@
-package com.project.librarymanagement.entity.business;
+package com.project.librarymanagement.payload.response.business;
 
-import jakarta.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.project.librarymanagement.entity.enums.Categories;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "categories")
-public class Category {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class CategoryResponse {
     private Long id;
-
-    @Column(unique = true)
-    private String categoryName;
+    private Categories categoryName;
 
     private Boolean builtIn;
 
     private int sequence;
-
 }
