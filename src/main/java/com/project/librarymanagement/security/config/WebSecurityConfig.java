@@ -32,15 +32,16 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf ->csrf.disable())
-            .exceptionHandling( exceptionHandling->
-                                exceptionHandling.authenticationEntryPoint(authEntryPointJwt))
-            .sessionManagement( sessionManagement ->
-                                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests( authorize->
-                                    authorize.requestMatchers(AUTH_WHITE_LIST).permitAll()
-                                    .anyRequest().authenticated());
+                .exceptionHandling(exceptionHandling->
+                        exceptionHandling.authenticationEntryPoint(authEntryPointJwt))
+                .sessionManagement(sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorize->
+                        authorize.requestMatchers(AUTH_WHITE_LIST).permitAll()
+                                .anyRequest().authenticated());
+
         http.headers( headers-> headers.
-                                frameOptions(frameOptions -> frameOptions.sameOrigin()));
+                frameOptions(frameOptions -> frameOptions.sameOrigin()));
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
