@@ -13,6 +13,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -53,8 +54,8 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Role> roles;
 
-    @OneToOne
-    private Loan loan;
+    @OneToMany(mappedBy = "user")
+    private List<Loan> loan;
 
     @PrePersist
     public void prePersist() {

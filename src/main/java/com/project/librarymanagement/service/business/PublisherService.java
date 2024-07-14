@@ -30,6 +30,7 @@ public class PublisherService {
     }
 
     public ResponseMessage<PublisherResponse> createPublisher(PublisherRequest publisherRequest) {
+        //TODO: validate if publisher already exists
         Publisher publisher = publisherMapper.mapPublisherRequestToPublisher(publisherRequest);
         Publisher savedPublisher = publisherRepository.save(publisher);
         return ResponseMessage.<PublisherResponse>builder()
