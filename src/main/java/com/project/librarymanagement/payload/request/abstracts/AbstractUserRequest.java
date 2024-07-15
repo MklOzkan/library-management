@@ -16,12 +16,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public abstract class AbstractUserRequest {
     @NotNull(message = "Please enter your name")
-    @Size(min = 4, max = 16,message = "Your name should be at least 4 chars")
+    @Size(min = 2, max = 16,message = "Your name should be at least 4 chars")
     @Pattern(regexp = "\\A(?!\\s*\\Z).+", message = "Your name must consist of the characters .")
     private String firstName;
 
     @NotNull(message = "Please enter your name")
-    @Size(min = 4, max = 16,message = "Your name should be at least 4 chars")
+    @Size(min = 2, max = 16,message = "Your name should be at least 4 chars")
     @Pattern(regexp = "\\A(?!\\s*\\Z).+", message = "Your name must consist of the characters .")
     private String lastName;
 

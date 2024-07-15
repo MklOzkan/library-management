@@ -22,7 +22,7 @@ public class ReportController {
 
     @GetMapping
     public ReportResponse getReport() {
-        reportService.getALLReport();
+        //reportService.getALLReport();
         return null;
     }
 
