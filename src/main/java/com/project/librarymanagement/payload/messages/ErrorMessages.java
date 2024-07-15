@@ -5,6 +5,7 @@ public class ErrorMessages {
     public static final String NOT_FOUND_BOOK_MESSAGE = "Error: Book with id, %s not found";
 
     //author
+    public static final String ALREADY_CREATED_AUTHOR_MESSAGE = "Error: %s Author already exist";
 
     public static final String NOT_FOUND_AUTHOR_MESSAGE = "Error: Author with id %s not found";
 
