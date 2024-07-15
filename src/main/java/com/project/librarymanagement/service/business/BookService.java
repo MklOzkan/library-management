@@ -36,11 +36,11 @@ public class BookService {
 
     public ResponseMessage<BookResponse> saveBook(BookRequest bookRequest) {
         //get author from author service
-        Author author = null;  //<=============================================================== needs to be changed after author part is done
+        Author author = methodHelper.isAuthorExist(bookRequest.getAuthor().getId());  //<=============================================================== needs to be changed after author part is done
         //get publisher from publisher service
-        Publisher publisher = null; //<=============================================================== needs to be changed after publisher part is done
+        Publisher publisher = methodHelper.isPublisherExists(bookRequest.getPublisher().getId()); //<=============================================================== needs to be changed after publisher part is done
         //get category from category service
-        Category category = null; //<=============================================================== needs to be changed after category part is done
+        Category category = methodHelper.isCategoryExist(bookRequest.getCategory().getId()); //<=============================================================== needs to be changed after category part is done
 
         //map DTO to entity
         Book book = bookMapper.mapBookRequestToBook(bookRequest, author, publisher, category);
@@ -74,14 +74,14 @@ Book isBookExistById(Long id){
     public ResponseMessage<BookResponse> updateBook(Long bookId, BookUpdateRequest bookUpdateRequest) {
 
         //validate if author exists
-        Author author = null; //<=============================================================== need to be changed after author part is done
+        Author author = methodHelper.isAuthorExist(bookUpdateRequest.getAuthorId()); //<=============================================================== need to be changed after author part is done
 
         //validate if publisher exists
-        Publisher publisher = null; //<=============================================================== need to be changed after publisher part is done
+        Publisher publisher = methodHelper.isPublisherExists(bookUpdateRequest.getPublisherId()); //<=============================================================== need to be changed after publisher part is done
 
 
         //validate if category exists
-        Category category = null;   //<=============================================================== need to be changed after category part is done
+        Category category = methodHelper.isCategoryExist(bookUpdateRequest.getCategoryId());   //<=============================================================== need to be changed after category part is done
 
 
         //validate if book exists

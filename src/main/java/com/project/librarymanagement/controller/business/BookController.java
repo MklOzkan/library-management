@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class BookController {
 
     private final BookService bookService;
-
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @PostMapping("/save")
     public ResponseMessage<BookResponse>saveBook(@RequestBody @Valid BookRequest bookRequest){
         return bookService.saveBook(bookRequest);
@@ -26,7 +27,7 @@ public class BookController {
 
 
 
-
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping("/findBookByPage")
     public Page<BookResponse> findBookByPage(
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -36,18 +37,18 @@ public class BookController {
         return bookService.findBookByPage(page, size, sort, type);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @GetMapping("/getById/{id}")
     public BookResponse getById(@PathVariable Long id) {
         return bookService.getById(id);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @PutMapping("/update/{bookId}")
     public ResponseMessage<BookResponse> updateById(@PathVariable Long bookId, @RequestBody @Valid BookUpdateRequest bookUpdateRequest){
         return bookService.updateBook(bookId, bookUpdateRequest);
     }
-
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @DeleteMapping("/delete/{bookId}")
     public ResponseMessage<Object> deleteById(@PathVariable Long bookId){
         return bookService.deleteById(bookId);
