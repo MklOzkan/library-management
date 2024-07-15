@@ -12,8 +12,12 @@ import com.project.librarymanagement.payload.response.business.ResponseMessage;
 import com.project.librarymanagement.repository.business.BookRepository;
 import com.project.librarymanagement.repository.business.LoanRepository;
 import com.project.librarymanagement.service.helper.MethodHelper;
+import com.project.librarymanagement.service.helper.PageableHelper;
 import com.project.librarymanagement.service.user.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,6 +32,7 @@ public class LoanService {
     private final MethodHelper methodHelper;
     private final LoanMapper loanMapper;
     private final BookRepository bookRepository;
+    private final PageableHelper pageableHelper;
 
     public ResponseMessage<LoanResponse> createLoan(LoanRequest loanRequest) {
         User user = methodHelper.findUserById(loanRequest.getUser().getId());
@@ -99,5 +104,27 @@ public class LoanService {
                 throw new BadRequestException("Book is not available");
             }
         }
+    }
+
+    public Page<LoanResponse> getAllLoansByPage(int page, int size, String sort, String type, HttpServletRequest httpServletRequest) {
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
+        String email = (String) httpServletRequest.getAttribute("email");
+        User user = methodHelper.loadUserByEmail(email);
+        return loanRepository.findByUserId(user.getId(),pageable)
+                .map(loanMapper::mapLoanToLoanResponseForMember);
+
+    }
+
+    public ResponseMessage<LoanResponse> getLoanById(Long loanId, HttpServletRequest httpServletRequest) {
+        String email = (String) httpServletRequest.getAttribute("email");
+        User user = methodHelper.loadUserByEmail(email);
+        Loan loan = methodHelper.findLoanById(loanId);
+        if(!loan.getUser().getId().equals(user.getId())){
+            throw new BadRequestException("You are not authorized to see this loan");
+        }
+        return ResponseMessage.<LoanResponse>builder()
+                .message("Loan found")
+                .returnBody(loanMapper.mapLoanToLoanResponseForMember(loan))
+                .build();
     }
 }

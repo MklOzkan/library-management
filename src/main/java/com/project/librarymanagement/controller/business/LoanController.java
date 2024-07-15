@@ -4,13 +4,12 @@ import com.project.librarymanagement.payload.request.business.LoanRequest;
 import com.project.librarymanagement.payload.response.business.LoanResponse;
 import com.project.librarymanagement.payload.response.business.ResponseMessage;
 import com.project.librarymanagement.service.business.LoanService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/loans")
@@ -23,5 +22,22 @@ public class LoanController {
     @PostMapping("/save")
     public ResponseMessage<LoanResponse> createLoan(@RequestBody @Valid LoanRequest loanRequest){
         return loanService.createLoan(loanRequest);
+    }
+
+    @PreAuthorize("hasAnyAuthority('Member')")
+    @GetMapping
+    public Page<LoanResponse> getAllLoans(
+            HttpServletRequest httpServletRequest,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sort", defaultValue = "loanDate") String sort,
+            @RequestParam(value = "type", defaultValue = "desc") String type){
+        return loanService.getAllLoansByPage(page, size,sort,type,httpServletRequest);
+    }
+
+    @PreAuthorize("hasAnyAuthority('Member')")
+    @GetMapping("/{loanId}")
+    public ResponseMessage<LoanResponse> getLoanById(@PathVariable Long loanId, HttpServletRequest httpServletRequest){
+        return loanService.getLoanById(loanId, httpServletRequest);
     }
 }
