@@ -1,9 +1,9 @@
 package com.project.librarymanagement.controller.business;
 
-import com.project.librarymanagement.payload.request.business.LoanRequest;
-import com.project.librarymanagement.payload.response.business.LoanResponse;
+import com.project.librarymanagement.payload.request.business.CategoryRequest;
+import com.project.librarymanagement.payload.response.business.CategoryResponse;
 import com.project.librarymanagement.payload.response.business.ResponseMessage;
-import com.project.librarymanagement.service.business.LoanService;
+import com.project.librarymanagement.service.business.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,15 +13,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/loans")
+@RequestMapping("/categories")
 @RequiredArgsConstructor
-public class LoanController {
+public class CategoryController {
 
-    private final LoanService loanService;
+    private final CategoryService categoryService;
 
-    @PreAuthorize("hasAnyAuthority('Admin','Employee')")
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @PostMapping("/save")
-    public ResponseMessage<LoanResponse> createLoan(@RequestBody @Valid LoanRequest loanRequest){
-        return loanService.createLoan(loanRequest);
+    public ResponseMessage<CategoryResponse> saveCategory(@RequestBody @Valid CategoryRequest categoryRequest) {
+        return categoryService.saveCategory(categoryRequest);
     }
+
 }

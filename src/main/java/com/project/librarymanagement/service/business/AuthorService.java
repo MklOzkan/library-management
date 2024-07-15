@@ -26,6 +26,7 @@ public class AuthorService {
 
 
     public ResponseMessage<AuthorResponse> saveAuthor(AuthorRequest authorRequest) {
+        //TODO: validate if author already exists
         // map from DTO -> entity
         Author author = authorMapper.mapAuthorRequestToAuthor(authorRequest);
         Author savedAuthor = authorRepository.save(author);

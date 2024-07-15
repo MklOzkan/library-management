@@ -8,7 +8,10 @@ import com.project.librarymanagement.payload.response.business.PublisherResponse
 import com.project.librarymanagement.payload.response.business.ResponseMessage;
 import com.project.librarymanagement.repository.business.PublisherRepository;
 import com.project.librarymanagement.service.helper.MethodHelper;
+import com.project.librarymanagement.service.helper.PageableHelper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,14 +25,17 @@ public class PublisherService {
 
     private final MethodHelper methodHelper;
 
+    private final PageableHelper pageableHelper;
+
     private final PublisherRepository publisherRepository;
 
-    public List<PublisherResponse> getAllPublishers() {
-        return publisherRepository.findAll()
-                .stream().map(publisherMapper :: mapPublisherToPublisherResponse).collect(Collectors.toList());
+    public Page<PublisherResponse> getAllPublishers(int page, int size, String sort, String type) {
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
+        return publisherRepository.findAll(pageable).map(publisherMapper::mapPublisherToPublisherResponse);
     }
 
     public ResponseMessage<PublisherResponse> createPublisher(PublisherRequest publisherRequest) {
+        methodHelper.isPublisherExistByName(publisherRequest.getName());
         Publisher publisher = publisherMapper.mapPublisherRequestToPublisher(publisherRequest);
         Publisher savedPublisher = publisherRepository.save(publisher);
         return ResponseMessage.<PublisherResponse>builder()
@@ -56,12 +62,12 @@ public class PublisherService {
                 .build();
     }
 
-    public ResponseMessage<Object> deletePublisher(Long id) {
-        Object publisher = methodHelper.isPublisherExist(id);
+    public ResponseMessage<PublisherResponse> deletePublisher(Long id) {
+        Publisher publisher = methodHelper.getPublisherById(id);
         publisherRepository.deleteById(id);
-        return ResponseMessage.<Object>builder()
+        return ResponseMessage.<PublisherResponse>builder()
                     .message(SuccessMessages.PUBLISHER_DELETE)
-                    .returnBody(publisher)
+                    .returnBody(publisherMapper.mapPublisherToPublisherResponse(publisher))
                     .build();
     }
 }
