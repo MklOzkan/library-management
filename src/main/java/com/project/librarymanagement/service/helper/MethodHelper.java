@@ -1,20 +1,18 @@
 package com.project.librarymanagement.service.helper;
 
-import com.project.librarymanagement.entity.business.Author;
-import com.project.librarymanagement.entity.business.Book;
-import com.project.librarymanagement.entity.business.Publisher;
+import com.project.librarymanagement.entity.business.*;
 import com.project.librarymanagement.entity.enums.RoleType;
 import com.project.librarymanagement.entity.user.Role;
 import com.project.librarymanagement.entity.user.User;
 import com.project.librarymanagement.exception.BadRequestException;
 import com.project.librarymanagement.exception.ResourceNotFoundException;
 import com.project.librarymanagement.payload.messages.ErrorMessages;
-import com.project.librarymanagement.repository.business.AuthorRepository;
-import com.project.librarymanagement.repository.business.BookRepository;
-import com.project.librarymanagement.repository.business.PublisherRepository;
+import com.project.librarymanagement.payload.response.business.ReportResponse;
+import com.project.librarymanagement.repository.business.*;
 import com.project.librarymanagement.repository.user.RoleRepository;
 import com.project.librarymanagement.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,6 +26,11 @@ public class MethodHelper {
     private final AuthorRepository authorRepository;
     private final PublisherRepository publisherRepository;
     private final RoleRepository roleRepository;
+    private final CategoryRepository categoryRepository;
+    private final LoanRepository loanRepository;
+
+
+    private final ReportResponse reportResponse;
 
     public User loadUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
@@ -81,5 +84,113 @@ public Author isAuthorExist(Long id){
 
         return true;
     }
+
+    public void isPublisherExistByName(String name) {
+        if (publisherRepository.existsByName(name)) {
+            throw new ResourceNotFoundException(String.format(ErrorMessages.ALREADY_CREATED_PUBLISHER_MESSAGE, name));
+        }
+    }
+
+    public List<Book> findBooksByIds(List<Long> ids) {
+        return bookRepository.findAllById(ids);
+    }
+
+    public Category isCategoryExist(Long id){
+        return categoryRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_CATEGORY_MESSAGE,id)));
+    }
+
+    public void isCategoryExistByName(String name){
+        if (categoryRepository.existsByName(name)) {
+            throw new BadRequestException(String.format(ErrorMessages.NOT_FOUND_CATEGORY_MESSAGE_BY_NAME, name));
+        }
+    }
+
+    public Loan findLoanById(Long id){
+        return loanRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Loan not found with id: " + id));
+    }
+
+    public Loan findLoanByUserId(Long userId){
+        return loanRepository.findByUserId(userId).orElseThrow(()->new ResourceNotFoundException("Loan not found with user id: " + userId));
+    }
+
+    public void isLoanExistById(Long id){
+        if(!loanRepository.existsById(id)){
+            throw new ResourceNotFoundException("Loan not found with id: " + id);
+        }
+    }
+
+    public void isLoanExistByUserId(Long userId){
+        if(!loanRepository.existsByUserId(userId)){
+            throw new ResourceNotFoundException("Loan not found with user id: " + userId);
+        }
+    }
+
+    public Publisher isPublisherExists(Long id) {
+        return publisherRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_PUBLISHER_MESSAGE,id)));
+    }
+
+    public ReportResponse gerReport()
+    {
+        reportResponse .builder()
+                .books(getBookCount())
+                .authors(getAuthorsCount())
+                .publishers(getPublishersCount())
+                .categories(getCategoriesCount())
+                .loans(getLoansCount())
+                .unReturnedBooks(getUnreturnedBookCounts())
+                .expiredBooks(getExpiredBooksCount())
+                .members(getMemebersCount())
+                .build();
+        return  reportResponse;
+    }
+
+    //find all book count
+    public int getBookCount ()
+    {
+        return (int) bookRepository.count();
+    }
+
+    public int getAuthorsCount ()
+    {
+        return (int) authorRepository.count();
+    }
+
+    public int getPublishersCount ()
+    {
+        return (int) publisherRepository.count();
+    }
+
+    public int getCategoriesCount ()
+    {
+        return (int) categoryRepository.count();
+    }
+
+    public int getLoansCount ()
+    {
+        return (int) loanRepository.count();
+    }
+
+    public int getUnreturnedBookCounts()
+    {
+        return  bookRepository.getUnrentedBookCount().intValue();
+    }
+
+
+
+    public int getExpiredBooksCount ()
+    {
+        return loanRepository.getDateExpiredBookCount().intValue();
+    }
+
+    public int getMemebersCount ()
+    {
+        return (int) loanRepository.count();
+    }
+
+
+
+
 
 }

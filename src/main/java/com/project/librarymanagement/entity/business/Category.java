@@ -24,7 +24,7 @@ public class Category {
     private String categoryName;
 
     private Boolean builtIn;
-
+    
     private int sequence;
 
 }
