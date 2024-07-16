@@ -121,4 +121,9 @@ public Author isAuthorExist(Long id){
         }
     }
 
+    public Publisher isPublisherExists(Long id) {
+        return publisherRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_PUBLISHER_MESSAGE,id)));
+    }
+
 }
