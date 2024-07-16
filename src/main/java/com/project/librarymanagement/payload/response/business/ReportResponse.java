@@ -14,16 +14,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReportResponse {
 
-//    {
-//        books: 1231,
-//                authors: 234,
-//            publishers:232,
-//            categories: 12,
-//            loans: 1324,
-//            unReturnedBooks: 124,
-//            expiredBooks: 12,
-//            members: 1322
-//    }
+
 
     private int books;
     private int authors;

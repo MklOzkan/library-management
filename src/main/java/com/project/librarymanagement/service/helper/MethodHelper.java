@@ -7,10 +7,12 @@ import com.project.librarymanagement.entity.user.User;
 import com.project.librarymanagement.exception.BadRequestException;
 import com.project.librarymanagement.exception.ResourceNotFoundException;
 import com.project.librarymanagement.payload.messages.ErrorMessages;
+import com.project.librarymanagement.payload.response.business.ReportResponse;
 import com.project.librarymanagement.repository.business.*;
 import com.project.librarymanagement.repository.user.RoleRepository;
 import com.project.librarymanagement.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -26,6 +28,9 @@ public class MethodHelper {
     private final RoleRepository roleRepository;
     private final CategoryRepository categoryRepository;
     private final LoanRepository loanRepository;
+
+
+
 
     public User loadUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
@@ -125,5 +130,10 @@ public Author isAuthorExist(Long id){
         return publisherRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_PUBLISHER_MESSAGE,id)));
     }
+
+
+
+
+
 
 }
