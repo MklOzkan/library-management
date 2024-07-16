@@ -4,6 +4,7 @@ import com.project.librarymanagement.entity.business.Loan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -15,4 +16,8 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
     Optional<Loan> findByUserId(Long userId);
 
     boolean existsByUserId(Long userId);
+
+
+    @Query(value = "SELECT COUNT(*) FROM loans WHERE expireDate < NOW()", nativeQuery = true)
+    Long getDateExpiredBookCount();
 }

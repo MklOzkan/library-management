@@ -1,39 +1,54 @@
 package com.project.librarymanagement.service.business;
 
+import com.project.librarymanagement.payload.mapper.BookMapper;
+import com.project.librarymanagement.payload.response.business.BookResponse;
 import com.project.librarymanagement.payload.response.business.ReportResponse;
+import com.project.librarymanagement.repository.business.BookRepository;
+import com.project.librarymanagement.service.helper.MethodHelper;
+import com.project.librarymanagement.service.helper.PageableHelper;
+import com.project.librarymanagement.service.helper.ReportHelper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ReportService {
 
 
-//    It will return following object
-//• Number of books
-//• Numeber of authors
-//• Number of publishers
-//• Number of categories
-//• Number of loans
-//• Number of books which not returned
-//• Number of expired books
-//• Number of members
-
-    //will be found total count of them and given as parametter
+        private final ReportHelper reportHelper;
+        private final PageableHelper pageableHelper;
+        private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
 
-    public ReportResponse getALLReport(int books,
-                                       int authors, int publishers, int categories,
-                                       int loans, int unReturnedBooks,
-                                       int expiredBooks,
-                                       int members) {
-        return new ReportResponse().builder()
-                .books(books)
-                .authors(authors)
-                .publishers(publishers)
-                .categories(categories)
-                .loans(loans)
-                .unReturnedBooks(unReturnedBooks)
-                .expiredBooks(expiredBooks)
-                .members(members)
-                .build();
+    public ReportResponse getALLReport() {
+        return reportHelper.getReport();
+    }
+
+    public Page<BookResponse> findMostPopularBooksByPage(int page, int size, String sort, String type) {
+
+        Pageable pageable = pageableHelper.getPageableWithProperties( page, size, sort, type);
+        return bookRepository.findAll(pageable)
+                .map(bookMapper::mapBookToBookResponse);
+    }
+
+    public Page<BookResponse> findUnreturnedBooksByPage(int page, int size, String sort, String type) {
+
+        Pageable pageable = pageableHelper.getPageableWithProperties( page, size, sort, type);
+        return bookRepository.getUnreturnedBooks(pageable).map(bookMapper::mapBookToBookResponse);
+    }
+
+    public Page<BookResponse> findExpiredBooksByPage(int page, int size, String sort, String type) {
+
+        Pageable pageable = pageableHelper.getPageableWithProperties( page, size, sort, type);
+        return bookRepository.getExpiredBooks(pageable).map(bookMapper::mapBookToBookResponse);
+    }
+
+
+    public Page<BookResponse> findMostBarrowedBooksByPage(int page, int size, String sort, String type) {
+        Pageable pageable = pageableHelper.getPageableWithProperties( page, size, sort, type);
+        return bookRepository.getMostBarowedBooks(pageable).map(bookMapper::mapBookToBookResponse);
     }
 }

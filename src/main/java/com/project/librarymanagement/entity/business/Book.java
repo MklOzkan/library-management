@@ -42,6 +42,7 @@ public class Book {
     private Boolean featured;
     private LocalDateTime createDate;
     private Boolean builtIn;
+    private int rentalAmount;
 
     @ManyToOne
     @JoinColumn(name = "loanId")
