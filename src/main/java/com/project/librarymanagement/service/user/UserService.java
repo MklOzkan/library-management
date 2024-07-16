@@ -4,6 +4,7 @@ import com.project.librarymanagement.entity.user.User;
 import com.project.librarymanagement.exception.ResourceNotFoundException;
 import com.project.librarymanagement.payload.mapper.UserMapper;
 import com.project.librarymanagement.payload.messages.ErrorMessages;
+import com.project.librarymanagement.payload.request.authentication.LoginRequest;
 import com.project.librarymanagement.payload.request.user.UserRequest;
 import com.project.librarymanagement.payload.request.user.UserRequestWithoutPassword;
 import com.project.librarymanagement.payload.response.business.ResponseMessage;
@@ -12,6 +13,7 @@ import com.project.librarymanagement.repository.user.UserRepository;
 import com.project.librarymanagement.service.helper.MethodHelper;
 import com.project.librarymanagement.service.helper.PageableHelper;
 import com.project.librarymanagement.validator.UniquePropertyValidator;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +31,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final PageableHelper pageableHelper;
     private final MethodHelper methodHelper;
+    private final AuthenticationService authenticationService;
 
 
     public List<User> getAllUsers() {
@@ -96,5 +99,18 @@ public class UserService {
         updatedUser.setActiveRole(user.getActiveRole());
         User savedUser = userRepository.save(updatedUser);
         return userMapper.mapUserToUserResponse(savedUser);
+    }
+
+    public UserResponse returnAuthenticatedUser(HttpServletRequest httpServletRequest) {
+        String email = httpServletRequest.getUserPrincipal().getName();
+        User user = methodHelper.loadUserByEmail(email);
+        LoginRequest loginRequest = LoginRequest.builder()
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .roleToLogin(user.getActiveRole())
+                .build();
+
+        authenticationService.authenticateUser(loginRequest);
+        return userMapper.mapUserToUserResponse(user);
     }
 }

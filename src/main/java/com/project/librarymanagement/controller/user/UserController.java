@@ -5,6 +5,7 @@ import com.project.librarymanagement.payload.request.user.UserRequestWithoutPass
 import com.project.librarymanagement.payload.response.business.ResponseMessage;
 import com.project.librarymanagement.payload.response.user.UserResponse;
 import com.project.librarymanagement.service.user.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,6 +35,11 @@ public class UserController {
         return userService.saveUser(userRequest, userRole);
     }
 
+    @PostMapping("/user")
+    @PreAuthorize("hasAnyAuthority('Admin','Employee','Member')")
+    public ResponseEntity<UserResponse>returnAuthenticatedUser(HttpServletRequest httpServletRequest){
+        return ResponseEntity.ok(userService.returnAuthenticatedUser(httpServletRequest));
+    }
 
     //2. /users -> will  return pageable user
     @GetMapping("/{userRole}")
