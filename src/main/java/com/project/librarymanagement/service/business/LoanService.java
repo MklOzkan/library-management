@@ -13,6 +13,7 @@ import com.project.librarymanagement.payload.response.business.LoanResponse;
 import com.project.librarymanagement.payload.response.business.ResponseMessage;
 import com.project.librarymanagement.repository.business.BookRepository;
 import com.project.librarymanagement.repository.business.LoanRepository;
+import com.project.librarymanagement.repository.user.UserRepository;
 import com.project.librarymanagement.service.helper.MethodHelper;
 import com.project.librarymanagement.service.helper.PageableHelper;
 import com.project.librarymanagement.service.user.MemberService;
@@ -36,6 +37,7 @@ public class LoanService {
     private final LoanMapper loanMapper;
     private final BookRepository bookRepository;
     private final PageableHelper pageableHelper;
+    private final UserRepository userRepository;
 
     public ResponseMessage<LoanResponse> createLoan(LoanRequest loanRequest) {
         User user = methodHelper.findUserById(loanRequest.getUser().getId());//check if user exits then get user
@@ -54,6 +56,9 @@ public class LoanService {
             book.setLoan(loan);
             bookRepository.save(book);
         }
+        user.setBorrowedBookCount(user.getBorrowedBookCount()+books.size());//set borrowed book count
+        user.setBorrowCount(user.getBorrowCount()+1);//set borrow count
+        userRepository.save(user);
 
         return ResponseMessage.<LoanResponse>builder()
                 .message(SuccessMessages.LOAN_SAVE)
@@ -139,12 +144,14 @@ public class LoanService {
         if (checkReturnDate(returnDate, loan.getExpireDate())){
             loan.setReturnDate(returnDate);
             loan.setActive(false);
+            user.setScore(user.getScore()+1);
 
             for (Book book: loan.getBooks()){
                 book.setLoanable(true);
                 bookRepository.save(book);
             }
             loanRepository.save(loan);
+            userRepository.save(user);
             return ResponseMessage.<LoanResponse>builder()
                     .message(SuccessMessages.LOAN_UPDATE_BEFORE_EXPIRE_DATE)
                     .returnBody(loanMapper.mapLoanToLoanResponseForAdminAndEmployee(loan))

@@ -30,7 +30,7 @@ public class UserController {
 
     //1.1 create user with role
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('Admin)")
+    @PreAuthorize("hasAnyAuthority('Admin')")
     public ResponseMessage<UserResponse>createUser(@RequestBody @Valid UserRequest userRequest, String userRole){
         return userService.saveUser(userRequest, userRole);
     }
