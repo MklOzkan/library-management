@@ -1,6 +1,7 @@
 package com.project.librarymanagement.controller.business;
 
 import com.project.librarymanagement.payload.request.business.LoanRequest;
+import com.project.librarymanagement.payload.request.business.LoanUpdateRequest;
 import com.project.librarymanagement.payload.response.business.LoanResponse;
 import com.project.librarymanagement.payload.response.business.ResponseMessage;
 import com.project.librarymanagement.service.business.LoanService;
@@ -39,5 +40,11 @@ public class LoanController {
     @GetMapping("/{loanId}")
     public ResponseMessage<LoanResponse> getLoanById(@PathVariable Long loanId, HttpServletRequest httpServletRequest){
         return loanService.getLoanById(loanId, httpServletRequest);
+    }
+
+    @PreAuthorize("hasAnyAuthority('Admin','Employee')")
+    @PutMapping("/{id}")
+    public ResponseMessage<LoanResponse> updateLoan(@RequestBody @Valid LoanUpdateRequest loanUpdateRequest, @PathVariable Long id){
+        return loanService.updateLoan(loanUpdateRequest, id);
     }
 }

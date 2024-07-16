@@ -6,7 +6,9 @@ import com.project.librarymanagement.entity.user.User;
 import com.project.librarymanagement.exception.BadRequestException;
 import com.project.librarymanagement.payload.mapper.LoanMapper;
 import com.project.librarymanagement.payload.messages.ErrorMessages;
+import com.project.librarymanagement.payload.messages.SuccessMessages;
 import com.project.librarymanagement.payload.request.business.LoanRequest;
+import com.project.librarymanagement.payload.request.business.LoanUpdateRequest;
 import com.project.librarymanagement.payload.response.business.LoanResponse;
 import com.project.librarymanagement.payload.response.business.ResponseMessage;
 import com.project.librarymanagement.repository.business.BookRepository;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -35,26 +38,27 @@ public class LoanService {
     private final PageableHelper pageableHelper;
 
     public ResponseMessage<LoanResponse> createLoan(LoanRequest loanRequest) {
-        User user = methodHelper.findUserById(loanRequest.getUser().getId());
+        User user = methodHelper.findUserById(loanRequest.getUser().getId());//check if user exits then get user
 
-        checkIfUserHasAlreadyBorrowedBook(user.getId());
-        checkUserScore(user.getId(), loanRequest.getBookIds());
-        checkIfBookIsAvailable(loanRequest.getBookIds());
-        List<Book> books = null;//methodHelper.findBooksByIds(loanRequest.getBookIds());
-        Loan loan = loanMapper.mapLoanRequestToLoan(loanRequest, books, user);
-        for (Book book: books){
-            book.setLoanable(false);
-            bookRepository.save(book);
-        }
+        checkIfUserHasAlreadyBorrowedBook(user.getId());//check if user has already borrowed a book
+        checkUserScore(user.getId(), loanRequest.getBookIds());//check user score
+        checkIfBookIsAvailable(loanRequest.getBookIds());//check if book is available
+        List<Book> books = methodHelper.findBooksByIds(loanRequest.getBookIds());//get books
+        Loan loan = loanMapper.mapLoanRequestToLoan(loanRequest, books, user);//map loan request to loan
+
         loan.setActive(true);
 
-        Loan savedLoan = loanRepository.save(loan);
+        Loan savedLoan = loanRepository.save(loan);//save loan
+        for (Book book: books){//set books loanable to false
+            book.setLoanable(false);
+            book.setLoan(loan);
+            bookRepository.save(book);
+        }
 
         return ResponseMessage.<LoanResponse>builder()
-                .message("Loan created successfully")
+                .message(SuccessMessages.LOAN_SAVE)
                 .returnBody(loanMapper.mapLoanToLoanResponseForAdminAndEmployee(savedLoan))
                 .build();
-
     }
 
     private void checkUserScore(Long userId, List<Long> bookIds) {
@@ -126,5 +130,41 @@ public class LoanService {
                 .message("Loan found")
                 .returnBody(loanMapper.mapLoanToLoanResponseForMember(loan))
                 .build();
+    }
+
+    public ResponseMessage<LoanResponse> updateLoan(LoanUpdateRequest loanUpdateRequest, Long id) {
+        Loan loan = methodHelper.findLoanById(id);
+        User user = methodHelper.findUserById(loan.getUser().getId());
+        LocalDateTime returnDate = LocalDateTime.now();
+        if (checkReturnDate(returnDate, loan.getExpireDate())){
+            loan.setReturnDate(returnDate);
+            loan.setActive(false);
+
+            for (Book book: loan.getBooks()){
+                book.setLoanable(true);
+                bookRepository.save(book);
+            }
+            loanRepository.save(loan);
+            return ResponseMessage.<LoanResponse>builder()
+                    .message(SuccessMessages.LOAN_UPDATE_BEFORE_EXPIRE_DATE)
+                    .returnBody(loanMapper.mapLoanToLoanResponseForAdminAndEmployee(loan))
+                    .build();
+        } else {
+            user.setScore(user.getScore()-1);
+            loan.setActive(false);
+            for (Book book: loan.getBooks()){
+                book.setLoanable(true);
+                bookRepository.save(book);
+            }
+            loanRepository.save(loan);
+            return ResponseMessage.<LoanResponse>builder()
+                    .message(SuccessMessages.LOAN_UPDATE_AFTER_EXPIRE_DATE)
+                    .returnBody(loanMapper.mapLoanToLoanResponseForAdminAndEmployee(loan))
+                    .build();
+        }
+    }
+
+    private boolean checkReturnDate(LocalDateTime returnDate, LocalDateTime expireDate) {
+        return returnDate.isBefore(expireDate);
     }
 }

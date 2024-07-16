@@ -20,4 +20,11 @@ public class SuccessMessages {
     public static final String PUBLISHER_DELETE = "Publisher is Deleted Successfully";
     public static final String PUBLISHER_FOUND = "Publisher is Found Successfully";
 
+    //Loan
+    public static final String LOAN_SAVE = "Loan is Saved Successfully";
+    public static final String LOAN_UPDATE_BEFORE_EXPIRE_DATE = "Loan is Updated Successfully";
+    public static final String LOAN_UPDATE_AFTER_EXPIRE_DATE = "Loan is Updated Successfully, and score is decreased by 1";
+    public static final String LOAN_DELETE = "Loan is Deleted Successfully";
+    public static final String LOAN_FOUND = "Loan is Found with Successfully";
+
 }

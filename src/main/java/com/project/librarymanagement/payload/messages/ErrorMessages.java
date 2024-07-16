@@ -22,4 +22,7 @@ public class ErrorMessages {
     public static final String CANNOT_HAVE_MORE_BOOKS = "Error: User with id %s cannot have more than %s books";
     public static final String NOT_FOUND_CATEGORY_MESSAGE = "Error: Category with id %s not found";
     public static final String NOT_FOUND_CATEGORY_MESSAGE_BY_NAME = "Error: Category with name %s not found";
+
+    //Publisher
+    public static final String ALREADY_CREATED_PUBLISHER_MESSAGE = "Error: Publisher with name %s already exist";
 }
