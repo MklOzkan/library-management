@@ -1,6 +1,7 @@
 package com.project.librarymanagement.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.librarymanagement.entity.business.Loan;
 import com.project.librarymanagement.entity.enums.Gender;
@@ -55,6 +56,7 @@ public class User {
     private List<Role> roles;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Loan> loan;
 
     @PrePersist

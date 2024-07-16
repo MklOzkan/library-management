@@ -1,5 +1,6 @@
 package com.project.librarymanagement.entity.business;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,8 +23,6 @@ public class Book {
     private Long id;
 
     private String name;
-
-
     private String isbn;
     private Integer pageCount;
     @ManyToOne
@@ -44,8 +43,13 @@ public class Book {
     private LocalDateTime createDate;
     private Boolean builtIn;
 
+    @ManyToOne
+    @JoinColumn(name = "loanId")
+    @JsonIgnore
+    private Loan loan;
 
-
-
-
+    @PrePersist
+    public void prePersist() {
+        this.createDate = LocalDateTime.now();
+    }
 }
