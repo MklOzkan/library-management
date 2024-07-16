@@ -26,6 +26,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
 
     //It will be change for most barrowed count
-    @Query("SELECT b.pageCount  FROM Book b ")
+    @Query("SELECT b FROM Book b ORDER BY COUNT(b.rentalAmount) DESC")
    Page<Book> getMostBarowedBooks(Pageable pageable);
 }
