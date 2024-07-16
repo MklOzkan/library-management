@@ -3,7 +3,6 @@ package com.project.librarymanagement.controller.business;
 
 import com.project.librarymanagement.payload.response.business.BookResponse;
 import com.project.librarymanagement.payload.response.business.ReportResponse;
-import com.project.librarymanagement.payload.response.user.UserResponse;
 import com.project.librarymanagement.service.business.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,13 +67,13 @@ public class ReportController {
 
     @PreAuthorize("hasAnyAuthority('Employee', 'Admin')")
     @GetMapping("/most-borrowers")
-    public Page<UserResponse> findMostBarrowedBooksByPage(
+    public Page<BookResponse> findMostBarrowedBooksByPage(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size,
             @RequestParam(value = "sort", defaultValue = "name") String sort,
             @RequestParam(value = "type", defaultValue = "asc") String type
     ) {
-        return  reportService.findMostBarrowerByPage(page, size, sort, type);
+        return  reportService.findMostBarrowedBooksByPage(page, size, sort, type);
     }
 
 }
