@@ -43,6 +43,9 @@ public class User {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "US/Eastern")
     private LocalDateTime createDate;
 
+    private int borrowedBookCount;
+    private int borrowCount;
+
     private Boolean active;
 
     private Boolean builtIn;
