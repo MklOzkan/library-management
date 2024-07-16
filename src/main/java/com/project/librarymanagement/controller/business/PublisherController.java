@@ -6,6 +6,8 @@ import com.project.librarymanagement.payload.response.business.ResponseMessage;
 import com.project.librarymanagement.service.business.PublisherService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,9 +19,14 @@ public class PublisherController {
 
     private final PublisherService publisherService;
 
+    //TODO: Pageable
     @GetMapping
-    public List<PublisherResponse> getAll() {
-        return publisherService.getAllPublishers();
+    public Page<PublisherResponse> getAll(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "20") int size,
+            @RequestParam(value = "sort", defaultValue = "name") String sort,
+            @RequestParam(value = "type", defaultValue = "asc") String type) {
+        return publisherService.getAllPublishers(page, size, sort, type);
     }
 
     @GetMapping ("/{id}")
@@ -27,6 +34,7 @@ public class PublisherController {
         return publisherService.getById(id);
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @PostMapping
     public ResponseMessage<PublisherResponse> createPublisher(@RequestBody @Valid PublisherRequest publisherRequest) {
         return publisherService.createPublisher(publisherRequest);
@@ -38,7 +46,7 @@ public class PublisherController {
     }
 
     @DeleteMapping ("/{id}")
-    public ResponseMessage<Object> deletePublisherById(@PathVariable @Valid Long id) {
+    public ResponseMessage<PublisherResponse> deletePublisherById(@PathVariable @Valid Long id) {
         return publisherService.deletePublisher(id);
     }
 

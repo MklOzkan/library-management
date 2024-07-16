@@ -1,7 +1,9 @@
 package com.project.librarymanagement.service.business;
 
 import com.project.librarymanagement.entity.business.Author;
+import com.project.librarymanagement.exception.ConflictException;
 import com.project.librarymanagement.payload.mapper.AuthorMapper;
+import com.project.librarymanagement.payload.messages.ErrorMessages;
 import com.project.librarymanagement.payload.messages.SuccessMessages;
 import com.project.librarymanagement.payload.request.business.AuthorRequest;
 import com.project.librarymanagement.payload.response.business.AuthorResponse;
@@ -26,6 +28,8 @@ public class AuthorService {
 
 
     public ResponseMessage<AuthorResponse> saveAuthor(AuthorRequest authorRequest) {
+        //TODO: validate if author already exists
+        isAuthorExistByName(authorRequest.getName());
         // map from DTO -> entity
         Author author = authorMapper.mapAuthorRequestToAuthor(authorRequest);
         Author savedAuthor = authorRepository.save(author);
@@ -35,7 +39,12 @@ public class AuthorService {
                 .message(SuccessMessages.AUTHOR_SAVE)
                 .build();
     }
-
+    private void isAuthorExistByName(String name) {
+        if (authorRepository.getByNameEqualsIgnoreCase(name).isPresent()) {
+            throw new ConflictException(
+                    String.format(ErrorMessages.ALREADY_CREATED_AUTHOR_MESSAGE, name));
+        }
+    }
 
     public Page<AuthorResponse> findAuthorsByPage(int page, int size, String sort, String type) {
         Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
@@ -46,8 +55,11 @@ public class AuthorService {
 
     public ResponseMessage<AuthorResponse> updateAuthor(Long id, AuthorRequest authorRequest) {
         //validate if author exists
-     methodHelper.isAuthorExist(id);
+     Author author =methodHelper.isAuthorExist(id);
         // Update the existing author entity
+        if(!author.getName().equals(authorRequest.getName())){
+           isAuthorExistByName(authorRequest.getName());
+        }
         Author updatedAuthor = authorMapper.mapAuthorRequestToAuthor(authorRequest);
         updatedAuthor.setId(id);
         // Save the updated author

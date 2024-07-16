@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,6 +21,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -41,14 +46,21 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             if(jwt !=null && jwtUtils.validateToken(jwt)){
                 // 3- we need username for to get the data
                 String email = jwtUtils.getEmailFromToken(jwt);
+                String roles = jwtUtils.getRolesFromToken(jwt);
                 // 4- check DB and find the user and upgrade it to UserDetails
                 UserDetails userDetails = userDetailService.loadUserByUsername(email);
+
+                List<GrantedAuthority> authorities = Arrays.stream(roles.split(","))
+                        .map(role -> new SimpleGrantedAuthority(role))
+                        .collect(Collectors.toList());
+
                 // 5- we are setting attribute prop username
                 request.setAttribute("email", email);
                 // 6- we have userdetails object then we have to send this information to
                 // SECURITY CONTEXT
+
                 UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 // 7- now spring context know who is logged in
                 SecurityContextHolder.getContext().setAuthentication(authentication);

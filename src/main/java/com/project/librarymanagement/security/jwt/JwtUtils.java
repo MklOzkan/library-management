@@ -25,17 +25,19 @@ public class JwtUtils {
 
     public String generateToken(Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        return buildTokenFromUsername(userDetails.getUsername(), userDetails.getAuthorities());
+        return buildTokenFromEmail(userDetails.getUsername(), userDetails.getAuthorities(), userDetails.getActiveRole());
     }
 
-    private String buildTokenFromUsername(String email, Collection<? extends GrantedAuthority> authorities) {
+    private String buildTokenFromEmail(String email, Collection<? extends GrantedAuthority> authorities, String activeRole){
+        String roles = authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
         return Jwts.builder()
-            .setSubject(email)
-            .claim("roles", authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(",")))
-            .setIssuedAt(new Date())
-            .setExpiration(new Date(new Date().getTime() + jwtExpirationMs))
-            .signWith(SignatureAlgorithm.HS512, jwtSecret)
-            .compact();
+                .setSubject(email)
+                .claim("roles", roles)
+                .claim("activeRole", activeRole)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + jwtExpirationMs))
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
     }
 
     public boolean validateToken(String token) {
@@ -58,16 +60,25 @@ public class JwtUtils {
 
     public String getEmailFromToken(String token) {
         return Jwts.parser()
-            .setSigningKey(jwtSecret)
-            .parseClaimsJws(token)
-            .getBody()
-            .getSubject();
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
+
     public String getRolesFromToken(String token) {
         return Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
                 .getBody()
                 .get("roles", String.class);
+    }
+
+    public String getActiveRoleFromToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody()
+                .get("activeRole", String.class);
     }
 }
