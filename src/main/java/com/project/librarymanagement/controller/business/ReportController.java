@@ -1,6 +1,7 @@
 package com.project.librarymanagement.controller.business;
 
 
+import com.project.librarymanagement.payload.response.business.BookResponse;
 import com.project.librarymanagement.payload.response.business.ReportResponse;
 import com.project.librarymanagement.service.business.ReportService;
 import lombok.RequiredArgsConstructor;
@@ -31,15 +32,48 @@ public class ReportController {
         return new ResponseEntity<>(ReportList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('Employee', 'Admin')")
+    //@PreAuthorize("hasAnyAuthority('Employee', 'Admin')")
     @GetMapping("/most-popular-books")
-    public Page<ReportResponse> findMostPopularBooksByPage(
-                @RequestParam (value = "page", defaultValue = "0") int page,
-                @RequestParam(value = "size", defaultValue = "20") int size
+    public Page<BookResponse> findMostPopularBooksByPage(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "20") int size,
+            @RequestParam(value = "sort", defaultValue = "name") String sort,
+            @RequestParam(value = "type", defaultValue = "asc") String type
                                     ) {
+        return  reportService.findMostPopularBooksByPage(page, size, sort, type);
+    }
 
+    //@PreAuthorize("hasAnyAuthority('Employee', 'Admin')")
+    @GetMapping("/unreturned-books")
+    public Page<BookResponse> findUnreturnedBooksByPage(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "20") int size,
+            @RequestParam(value = "sort", defaultValue = "name") String sort,
+            @RequestParam(value = "type", defaultValue = "asc") String type
+    ) {
+        return  reportService.findUnreturnedBooksByPage(page, size, sort, type);
+    }
 
-        return  reportService.findMostPopularBooksByPage(page,size);;
+    //@PreAuthorize("hasAnyAuthority('Employee', 'Admin')")
+    @GetMapping("/expired-books")
+    public Page<BookResponse> findExpiredBooksByPage(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "20") int size,
+            @RequestParam(value = "sort", defaultValue = "name") String sort,
+            @RequestParam(value = "type", defaultValue = "asc") String type
+    ) {
+        return  reportService.findExpiredBooksByPage(page, size, sort, type);
+    }
+
+    @PreAuthorize("hasAnyAuthority('Employee', 'Admin')")
+    @GetMapping("/most-borrowers")
+    public Page<BookResponse> findMostBarrowedBooksByPage(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "20") int size,
+            @RequestParam(value = "sort", defaultValue = "name") String sort,
+            @RequestParam(value = "type", defaultValue = "asc") String type
+    ) {
+        return  reportService.findMostBarrowedBooksByPage(page, size, sort, type);
     }
 
 }

@@ -30,7 +30,7 @@ public class MethodHelper {
     private final LoanRepository loanRepository;
 
 
-    private final ReportResponse reportResponse;
+
 
     public User loadUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
@@ -131,64 +131,6 @@ public Author isAuthorExist(Long id){
                 new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_PUBLISHER_MESSAGE,id)));
     }
 
-    public ReportResponse gerReport()
-    {
-        reportResponse .builder()
-                .books(getBookCount())
-                .authors(getAuthorsCount())
-                .publishers(getPublishersCount())
-                .categories(getCategoriesCount())
-                .loans(getLoansCount())
-                .unReturnedBooks(getUnreturnedBookCounts())
-                .expiredBooks(getExpiredBooksCount())
-                .members(getMemebersCount())
-                .build();
-
-        return  reportResponse;
-    }
-
-    //find all book count
-    public int getBookCount ()
-    {
-        return (int) bookRepository.count();
-    }
-
-    public int getAuthorsCount ()
-    {
-        return (int) authorRepository.count();
-    }
-
-    public int getPublishersCount ()
-    {
-        return (int) publisherRepository.count();
-    }
-
-    public int getCategoriesCount ()
-    {
-        return (int) categoryRepository.count();
-    }
-
-    public int getLoansCount ()
-    {
-        return (int) loanRepository.count();
-    }
-
-    public int getUnreturnedBookCounts()
-    {
-        return  bookRepository.getUnrentedBookCount().intValue();
-    }
-
-
-
-    public int getExpiredBooksCount ()
-    {
-        return loanRepository.getDateExpiredBookCount().intValue();
-    }
-
-    public int getMemebersCount ()
-    {
-        return (int) userRepository.count();
-    }
 
 
 

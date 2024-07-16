@@ -66,6 +66,13 @@ public class BookService {
         return bookRepository.findAll(pageable).map(bookMapper::mapBookToBookResponse);
     }
 
+    ////added by Tevfik
+    public Page<BookResponse> findUnreturnedBooksByPage(int page, int size, String sort, String type) {
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
+        Page<Book> bookPage = bookRepository.getUnreturnedBooks(pageable);
+        return bookPage.map(bookMapper::mapBookToBookResponse);
+    }
+
 Book isBookExistById(Long id){
         return bookRepository.findById(id).orElseThrow(()->new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_BOOK_MESSAGE,id)));
 }
