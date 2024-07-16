@@ -143,6 +143,7 @@ public Author isAuthorExist(Long id){
                 .expiredBooks(getExpiredBooksCount())
                 .members(getMemebersCount())
                 .build();
+
         return  reportResponse;
     }
 
@@ -186,7 +187,7 @@ public Author isAuthorExist(Long id){
 
     public int getMemebersCount ()
     {
-        return (int) loanRepository.count();
+        return (int) userRepository.count();
     }
 
 
