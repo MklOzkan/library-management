@@ -54,6 +54,7 @@ public class LoanService {
         for (Book book: books){//set books loanable to false
             book.setLoanable(false);
             book.setLoan(loan);
+            book.setRentalAmount(book.getRentalAmount()+1);
             bookRepository.save(book);
         }
         user.setBorrowedBookCount(user.getBorrowedBookCount()+books.size());//set borrowed book count
