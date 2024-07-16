@@ -5,6 +5,7 @@ import com.project.librarymanagement.payload.request.user.UserRequestWithoutPass
 import com.project.librarymanagement.payload.response.business.ResponseMessage;
 import com.project.librarymanagement.payload.response.user.UserResponse;
 import com.project.librarymanagement.service.user.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,12 +24,22 @@ public class UserController {
     //1. /register -> create user
     //Everyone has authority
     @PostMapping("/register")
-    //TODO this end-point should be usable by anyone, added Admin for test but getting error
-    @PreAuthorize("hasAnyAuthority('Admin')")
     public ResponseEntity<UserResponse>register(@RequestBody @Valid UserRequest userRequest){
         return new ResponseEntity<>(userService.createUser(userRequest), HttpStatus.CREATED);
     }
 
+    //1.1 create user with role
+    @PostMapping
+    @PreAuthorize("hasAnyAuthority('Admin)")
+    public ResponseMessage<UserResponse>createUser(@RequestBody @Valid UserRequest userRequest, String userRole){
+        return userService.saveUser(userRequest, userRole);
+    }
+
+    @PostMapping("/user")
+    @PreAuthorize("hasAnyAuthority('Admin','Employee','Member')")
+    public ResponseEntity<UserResponse>returnAuthenticatedUser(HttpServletRequest httpServletRequest){
+        return ResponseEntity.ok(userService.returnAuthenticatedUser(httpServletRequest));
+    }
 
     //2. /users -> will  return pageable user
     @GetMapping("/{userRole}")

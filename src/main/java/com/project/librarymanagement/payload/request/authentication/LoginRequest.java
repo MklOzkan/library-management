@@ -2,12 +2,14 @@ package com.project.librarymanagement.payload.request.authentication;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class LoginRequest {
   
   @NotNull(message = "Username must not be empty")
