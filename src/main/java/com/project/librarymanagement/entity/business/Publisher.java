@@ -1,5 +1,6 @@
 package com.project.librarymanagement.entity.business;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,7 @@ public class Publisher {
         private Boolean builtIn;
 
         @OneToMany (mappedBy = "publisher", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+        @JsonIgnore
         private Set<Book> books;
 
 }

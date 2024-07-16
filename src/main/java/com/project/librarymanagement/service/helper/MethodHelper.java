@@ -81,8 +81,8 @@ public Author isAuthorExist(Long id){
     }
 
     public void isPublisherExistByName(String name) {
-        if (!publisherRepository.existsByName(name)) {
-            throw new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_PUBLISHER_MESSAGE_NAME, name));
+        if (publisherRepository.existsByName(name)) {
+            throw new ResourceNotFoundException(String.format(ErrorMessages.ALREADY_CREATED_PUBLISHER_MESSAGE, name));
         }
     }
 
