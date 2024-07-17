@@ -61,4 +61,15 @@ public class LoanController {
             @RequestParam(value = "type", defaultValue = "desc") String type){
         return loanService.getLoansByUserId(userId, page, size, sort, type);
     }
+
+    @PreAuthorize("hasAnyAuthority('Admin','Employee')")
+    @GetMapping("/book/{bookId}")
+    public Page<LoanResponse> getLoansByBookId(
+            @PathVariable Long bookId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sort", defaultValue = "loanDate") String sort,
+            @RequestParam(value = "type", defaultValue = "desc") String type){
+        return loanService.getLoansByBookId(bookId, page, size, sort, type);
+    }
 }

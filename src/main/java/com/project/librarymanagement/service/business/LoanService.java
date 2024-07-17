@@ -187,4 +187,11 @@ public class LoanService {
         return loanRepository.findByUserId(user.getId(), pageable)
                 .map(loanMapper::mapLoanToLoanResponseForAdminAndEmployee);
     }
+
+    public Page<LoanResponse> getLoansByBookId(Long bookId, int page, int size, String sort, String type) {
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
+        Book book = methodHelper.isBookExist(bookId);
+        return loanRepository.findByBookId(book.getId(), pageable)
+                .map(loanMapper::mapLoanToLoanResponseForAdminAndEmployee);
+    }
 }
