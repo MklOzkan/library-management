@@ -194,4 +194,9 @@ public class LoanService {
         return loanRepository.findByBookId(book.getId(), pageable)
                 .map(loanMapper::mapLoanToLoanResponseForAdminAndEmployee);
     }
+
+    public LoanResponse getById(Long loanId) {
+        Loan loan = methodHelper.findLoanById(loanId);
+        return loanMapper.mapLoanToLoanResponseForAdminAndEmployee(loan);
+    }
 }

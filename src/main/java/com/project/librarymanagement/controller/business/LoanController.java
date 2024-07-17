@@ -72,4 +72,10 @@ public class LoanController {
             @RequestParam(value = "type", defaultValue = "desc") String type){
         return loanService.getLoansByBookId(bookId, page, size, sort, type);
     }
+
+    @PreAuthorize("hasAnyAuthority('Admin','Employee')")
+    @GetMapping("/auth/{loanId}")
+    public ResponseEntity<LoanResponse> getLoanById(@PathVariable Long loanId){
+        return ResponseEntity.ok(loanService.getById(loanId));
+    }
 }
