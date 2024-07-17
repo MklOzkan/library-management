@@ -21,7 +21,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Page<Book> getUnreturnedBooks(Pageable page);
 
 
-    @Query("SELECT b  FROM Book b JOIN Loan l WHERE l.returnDate < NOW()")
+    @Query("SELECT b FROM Book b JOIN b.loan l WHERE l.returnDate < CURRENT_TIMESTAMP")
     Page<Book> getExpiredBooks(Pageable page);
 
 

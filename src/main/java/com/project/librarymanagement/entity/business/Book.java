@@ -46,7 +46,6 @@ public class Book {
 
     @ManyToOne
     @JoinColumn(name = "loanId")
-    @JsonIgnore
     private Loan loan;
 
     @PrePersist

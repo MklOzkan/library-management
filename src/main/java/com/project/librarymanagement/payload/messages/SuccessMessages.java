@@ -27,4 +27,8 @@ public class SuccessMessages {
     public static final String LOAN_DELETE = "Loan is Deleted Successfully";
     public static final String LOAN_FOUND = "Loan is Found with Successfully";
 
+    //Role
+
+    public static final String ROLE_SAVE = "Role is Saved Successfully";
+
 }

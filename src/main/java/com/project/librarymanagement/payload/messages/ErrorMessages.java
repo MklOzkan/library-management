@@ -25,4 +25,12 @@ public class ErrorMessages {
 
     //Publisher
     public static final String ALREADY_CREATED_PUBLISHER_MESSAGE = "Error: Publisher with name %s already exist";
+
+    //Role
+
+    public static final String ALREADY_EXIST_ROLE_MESSAGE = "Error: Role with name %s already exist";
+
+    public static final String CANNOT_HAVE_MORE_THAN_TWO_ROLE_MESSAGE = "Error: User with id %s cannot have more than two roles";
+
+    public static final String MANAGER_CANNOT_HAVE_ANOTHER_MANAGER_ROLE_MESSAGE = "Error: Admin cannot have Employee role or Employee cannot have Admin role";
 }
