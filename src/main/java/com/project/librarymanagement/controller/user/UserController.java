@@ -3,6 +3,7 @@ package com.project.librarymanagement.controller.user;
 import com.project.librarymanagement.payload.request.user.RoleRequest;
 import com.project.librarymanagement.payload.request.user.UserRequest;
 import com.project.librarymanagement.payload.request.user.UserRequestWithoutPassword;
+import com.project.librarymanagement.payload.response.business.AuthenticatedUserLoanResponse;
 import com.project.librarymanagement.payload.response.business.ResponseMessage;
 import com.project.librarymanagement.payload.response.user.UserResponse;
 import com.project.librarymanagement.service.user.UserService;
@@ -14,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -40,6 +43,17 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('Admin','Employee','Member')")
     public ResponseEntity<UserResponse>returnAuthenticatedUser(HttpServletRequest httpServletRequest){
         return ResponseEntity.ok(userService.returnAuthenticatedUser(httpServletRequest));
+    }
+
+    @PostMapping("/user/loans")
+    @PreAuthorize("hasAnyAuthority('Admin','Employee','Member')")
+    public AuthenticatedUserLoanResponse returnAuthenticatedUserLoans(HttpServletRequest httpServletRequest,
+                                                                      @RequestParam (value = "page", defaultValue = "0") int page,
+                                                                      @RequestParam (value = "size", defaultValue = "10") int size,
+                                                                      @RequestParam (value = "sort", defaultValue = "name") String sort,
+                                                                      @RequestParam (value = "type", defaultValue = "desc") String type
+    ){
+        return userService.returnAuthenticatedUserLoans(httpServletRequest, page,size,sort,type);
     }
 
     //2. /users -> will  return pageable user

@@ -10,9 +10,12 @@ import com.project.librarymanagement.payload.messages.SuccessMessages;
 import com.project.librarymanagement.payload.request.authentication.LoginRequest;
 import com.project.librarymanagement.payload.request.user.UserRequest;
 import com.project.librarymanagement.payload.request.user.UserRequestWithoutPassword;
+import com.project.librarymanagement.payload.response.business.AuthenticatedUserLoanResponse;
+import com.project.librarymanagement.payload.response.business.LoanResponse;
 import com.project.librarymanagement.payload.response.business.ResponseMessage;
 import com.project.librarymanagement.payload.response.user.UserResponse;
 import com.project.librarymanagement.repository.user.UserRepository;
+import com.project.librarymanagement.service.business.LoanService;
 import com.project.librarymanagement.service.helper.MethodHelper;
 import com.project.librarymanagement.service.helper.PageableHelper;
 import com.project.librarymanagement.validator.UniquePropertyValidator;
@@ -35,6 +38,7 @@ public class UserService {
     private final PageableHelper pageableHelper;
     private final MethodHelper methodHelper;
     private final AuthenticationService authenticationService;
+    private final LoanService loanService;
 
 
     public List<User> getAllUsers() {
@@ -146,5 +150,15 @@ public class UserService {
         if (roles.size() > 2) {
             throw new ConflictException(ErrorMessages.CANNOT_HAVE_MORE_THAN_TWO_ROLE_MESSAGE);
         }
+    }
+
+    public AuthenticatedUserLoanResponse returnAuthenticatedUserLoans(HttpServletRequest httpServletRequest, int page, int size, String sort, String type) {
+        UserResponse userResponse = returnAuthenticatedUser(httpServletRequest);
+        Page<LoanResponse> responsePage = loanService.getAllLoansByPage(page, size, sort, type, httpServletRequest);
+        return AuthenticatedUserLoanResponse.builder()
+                .loanResponsePage(responsePage)
+                .userResponse(userResponse)
+                .httpStatus(HttpStatus.OK)
+                .build();
     }
 }
