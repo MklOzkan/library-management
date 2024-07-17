@@ -38,7 +38,6 @@ public class LoanMapper {
         return LoanResponse.builder()
                 .loanId(loan.getId())
                 .books(loan.getBooks())
-                .userId(loan.getUser().getId())
                 .loanDate(loan.getLoanDate())
                 .expireDate(loan.getExpireDate())
                 .active(loan.getActive())

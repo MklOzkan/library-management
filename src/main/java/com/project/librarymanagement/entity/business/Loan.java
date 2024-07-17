@@ -31,8 +31,7 @@ public class Loan {
         private Boolean active;
         private String notes;
 
-        @OneToMany
-        @JoinColumn(name = "loanId")
+        @OneToMany(mappedBy = "loan", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
         private List<Book> books;
 
         @PrePersist
