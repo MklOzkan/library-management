@@ -18,6 +18,6 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
     boolean existsByUserId(Long userId);
 
 
-    @Query(value = "SELECT COUNT(*) FROM loans WHERE expireDate < NOW()", nativeQuery = true)
+    @Query(value = "SELECT COUNT(*) FROM loans WHERE loans.expire_date < NOW()", nativeQuery = true)
     Long getDateExpiredBookCount();
 }

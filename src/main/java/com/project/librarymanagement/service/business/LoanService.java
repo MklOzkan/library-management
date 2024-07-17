@@ -20,7 +20,9 @@ import com.project.librarymanagement.service.user.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -117,9 +119,12 @@ public class LoanService {
     }
 
     public Page<LoanResponse> getAllLoansByPage(int page, int size, String sort, String type, HttpServletRequest httpServletRequest) {
-        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
+        //Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
         String email = (String) httpServletRequest.getAttribute("email");
         User user = methodHelper.loadUserByEmail(email);
+
+        Sort.Direction direction = type.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort));
         return loanRepository.findByUserId(user.getId(),pageable)
                 .map(loanMapper::mapLoanToLoanResponseForMember);
 
@@ -174,5 +179,12 @@ public class LoanService {
 
     private boolean checkReturnDate(LocalDateTime returnDate, LocalDateTime expireDate) {
         return returnDate.isBefore(expireDate);
+    }
+
+    public Page<LoanResponse> getLoansByUserId(Long userId, int page, int size, String sort, String type) {
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
+        User user = methodHelper.findUserById(userId);
+        return loanRepository.findByUserId(user.getId(), pageable)
+                .map(loanMapper::mapLoanToLoanResponseForAdminAndEmployee);
     }
 }

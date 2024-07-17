@@ -9,6 +9,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,13 +30,13 @@ public class LoanController {
 
     @PreAuthorize("hasAnyAuthority('Member')")
     @GetMapping
-    public Page<LoanResponse> getAllLoans(
+    public ResponseEntity<Page<LoanResponse>> getAllLoans(
             HttpServletRequest httpServletRequest,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "sort", defaultValue = "loanDate") String sort,
             @RequestParam(value = "type", defaultValue = "desc") String type){
-        return loanService.getAllLoansByPage(page, size,sort,type,httpServletRequest);
+        return ResponseEntity.ok(loanService.getAllLoansByPage(page, size,sort,type,httpServletRequest));
     }
 
     @PreAuthorize("hasAnyAuthority('Member')")
@@ -46,5 +49,16 @@ public class LoanController {
     @PutMapping("/{id}")
     public ResponseMessage<LoanResponse> updateLoan(@RequestBody @Valid LoanUpdateRequest loanUpdateRequest, @PathVariable Long id){
         return loanService.updateLoan(loanUpdateRequest, id);
+    }
+
+    @PreAuthorize("hasAnyAuthority('Admin','Employee')")
+    @GetMapping("/user/{userId}")
+    public Page<LoanResponse> getLoansByUserId(
+            @PathVariable Long userId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sort", defaultValue = "loanDate") String sort,
+            @RequestParam(value = "type", defaultValue = "desc") String type){
+        return loanService.getLoansByUserId(userId, page, size, sort, type);
     }
 }
