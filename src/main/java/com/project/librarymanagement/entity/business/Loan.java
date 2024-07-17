@@ -31,7 +31,8 @@ public class Loan {
         private Boolean active;
         private String notes;
 
-        @OneToMany(mappedBy = "loan")
+        @OneToMany
+        @JoinColumn(name = "loanId")
         private List<Book> books;
 
         @PrePersist

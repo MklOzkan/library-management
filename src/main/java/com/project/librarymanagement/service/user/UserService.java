@@ -1,9 +1,12 @@
 package com.project.librarymanagement.service.user;
 
+import com.project.librarymanagement.entity.user.Role;
 import com.project.librarymanagement.entity.user.User;
+import com.project.librarymanagement.exception.ConflictException;
 import com.project.librarymanagement.exception.ResourceNotFoundException;
 import com.project.librarymanagement.payload.mapper.UserMapper;
 import com.project.librarymanagement.payload.messages.ErrorMessages;
+import com.project.librarymanagement.payload.messages.SuccessMessages;
 import com.project.librarymanagement.payload.request.authentication.LoginRequest;
 import com.project.librarymanagement.payload.request.user.UserRequest;
 import com.project.librarymanagement.payload.request.user.UserRequestWithoutPassword;
@@ -112,5 +115,36 @@ public class UserService {
 
         authenticationService.authenticateUser(loginRequest);
         return userMapper.mapUserToUserResponse(user);
+    }
+
+    public ResponseMessage<UserResponse> addRoleToUser(Long userId, String roleName) {
+        User user = methodHelper.findUserById(userId);
+        List<Role> roles = user.getRoles().stream().toList();
+        checkRoleCount(roles);
+        Role userRole = roles.get(0);
+        Role role = methodHelper.findRoleByName(roleName);
+
+        if(roles.contains(role)){
+            throw new ConflictException(String.format(ErrorMessages.ALREADY_EXIST_ROLE_MESSAGE, role.getRoleName()));
+        }
+
+        if (userRole.getRoleName().equals("Admin")&&role.getRoleName().equals("Employee")||
+                userRole.getRoleName().equals("Employee")&&role.getRoleName().equals("Admin")) {
+            throw new ConflictException(ErrorMessages.MANAGER_CANNOT_HAVE_ANOTHER_MANAGER_ROLE_MESSAGE);
+        }
+
+        user.getRoles().add(role);
+        userRepository.save(user);
+
+        return ResponseMessage.<UserResponse>builder()
+                .message(SuccessMessages.ROLE_SAVE)
+                .returnBody(userMapper.mapUserToUserResponse(user))
+                .build();
+    }
+
+    private void checkRoleCount(List<Role> roles) {
+        if (roles.size() > 2) {
+            throw new ConflictException(ErrorMessages.CANNOT_HAVE_MORE_THAN_TWO_ROLE_MESSAGE);
+        }
     }
 }

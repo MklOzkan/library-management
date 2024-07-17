@@ -1,5 +1,6 @@
 package com.project.librarymanagement.controller.user;
 
+import com.project.librarymanagement.payload.request.user.RoleRequest;
 import com.project.librarymanagement.payload.request.user.UserRequest;
 import com.project.librarymanagement.payload.request.user.UserRequestWithoutPassword;
 import com.project.librarymanagement.payload.response.business.ResponseMessage;
@@ -73,5 +74,11 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('Admin','Employee')")
     public ResponseEntity<UserResponse>updateUserById(@RequestBody @Valid UserRequestWithoutPassword userRequest, @PathVariable Long id){
         return ResponseEntity.ok(userService.updateUserById(userRequest, id));
+    }
+
+    @PreAuthorize("hasAnyAuthority('Admin')")
+    @PostMapping("/{id}")
+    public ResponseMessage<UserResponse> AddRole(@PathVariable Long id, @RequestBody @Valid RoleRequest roleRequest) {
+        return userService.addRoleToUser(id, roleRequest.getRoleName());
     }
 }
