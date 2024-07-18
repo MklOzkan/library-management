@@ -31,4 +31,14 @@ public class SuccessMessages {
 
     public static final String ROLE_SAVE = "Role is Saved Successfully";
 
+
+    //User
+    public static final String USER_SAVE = "User is Saved Successfully";
+
+    public static final String USER_UPDATE = "User is Updated Successfully";
+
+    public static final String USER_DELETE = "User is Deleted Successfully";
+
+
+
 }

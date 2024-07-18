@@ -1,6 +1,7 @@
 package com.project.librarymanagement.service.business;
 
 import com.project.librarymanagement.entity.business.Author;
+import com.project.librarymanagement.entity.user.User;
 import com.project.librarymanagement.exception.ConflictException;
 import com.project.librarymanagement.payload.mapper.AuthorMapper;
 import com.project.librarymanagement.payload.messages.ErrorMessages;
@@ -11,6 +12,7 @@ import com.project.librarymanagement.payload.response.business.ResponseMessage;
 import com.project.librarymanagement.repository.business.AuthorRepository;
 import com.project.librarymanagement.service.helper.MethodHelper;
 import com.project.librarymanagement.service.helper.PageableHelper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,11 +29,14 @@ public class AuthorService {
     private final AuthorMapper authorMapper;
 
 
-    public ResponseMessage<AuthorResponse> saveAuthor(AuthorRequest authorRequest) {
-        //TODO: validate if author already exists
+    public ResponseMessage<AuthorResponse> saveAuthor(AuthorRequest authorRequest, HttpServletRequest httpServletRequest) {
+        String email = (String) httpServletRequest.getAttribute("email");
+        User user = methodHelper.loadUserByEmail(email);
+        methodHelper.isRoleAdmin(user);
         isAuthorExistByName(authorRequest.getName());
         // map from DTO -> entity
         Author author = authorMapper.mapAuthorRequestToAuthor(authorRequest);
+
         Author savedAuthor = authorRepository.save(author);
         return ResponseMessage.<AuthorResponse>builder()
                 .returnBody(authorMapper.mapAuthorToAuthorResponse(savedAuthor))
@@ -53,7 +58,10 @@ public class AuthorService {
     }
 
 
-    public ResponseMessage<AuthorResponse> updateAuthor(Long id, AuthorRequest authorRequest) {
+    public ResponseMessage<AuthorResponse> updateAuthor(Long id, AuthorRequest authorRequest, HttpServletRequest httpServletRequest) {
+        String email = (String) httpServletRequest.getAttribute("email");
+        User user = methodHelper.loadUserByEmail(email);
+        methodHelper.isRoleAdmin(user);
         //validate if author exists
      Author author =methodHelper.isAuthorExist(id);
         // Update the existing author entity

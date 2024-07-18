@@ -112,7 +112,7 @@ public class LoanService {
     private void checkIfBookIsAvailable(List<Long> bookIds) {
         for (Long bookId: bookIds) {
             Book book = methodHelper.isBookExist(bookId);
-            if (book.getBuiltIn()) {
+            if (!book.getLoanable()){
                 throw new BadRequestException("Book is not available");
             }
         }

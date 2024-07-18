@@ -131,9 +131,36 @@ public Author isAuthorExist(Long id){
                 new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_PUBLISHER_MESSAGE,id)));
     }
 
+    public void isRoleAdmin(User authenticatedUser){
+        if(!authenticatedUser.getActiveRole().equals("Admin")){
+            throw new BadRequestException(ErrorMessages.NOT_AUTHORIZED_MESSAGE);
+        }
+    }
+
+    public void isRoleAdminOrEmployee(User authenticatedUser){
+        if(!authenticatedUser.getActiveRole().equals("Admin") && !authenticatedUser.getActiveRole().equals("Employee")){
+            throw new BadRequestException(ErrorMessages.NOT_AUTHORIZED_MESSAGE);
+        }
+    }
 
 
+    public void isRoleEmployee(User authenticatedUser) {
 
+        if(!authenticatedUser.getActiveRole().equals("Employee")){
+            throw new BadRequestException(ErrorMessages.NOT_AUTHORIZED_MESSAGE);
+        }
+    }
 
+    public void isRoleMember(User authenticatedUser) {
 
+        if(!authenticatedUser.getActiveRole().equals("Member")){
+            throw new BadRequestException(ErrorMessages.NOT_AUTHORIZED_MESSAGE);
+        }
+    }
+
+    public void checkIfRoleMember(String userRole) {
+        if(userRole.equals("Member")){
+            throw new BadRequestException(ErrorMessages.NOT_AUTHORIZED_MESSAGE);
+        }
+    }
 }

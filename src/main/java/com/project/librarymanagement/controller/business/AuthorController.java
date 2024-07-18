@@ -4,6 +4,7 @@ import com.project.librarymanagement.payload.request.business.AuthorRequest;
 import com.project.librarymanagement.payload.response.business.AuthorResponse;
 import com.project.librarymanagement.payload.response.business.ResponseMessage;
 import com.project.librarymanagement.service.business.AuthorService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,8 +21,8 @@ public class AuthorController {
     private final AuthorService authorService;
     @PreAuthorize("hasAnyAuthority('Admin')")
     @PostMapping("/save")
-    public ResponseMessage<AuthorResponse> saveAuthor(@RequestBody @Valid AuthorRequest authorRequest) {
-        return authorService.saveAuthor(authorRequest);
+    public ResponseMessage<AuthorResponse> saveAuthor(@RequestBody @Valid AuthorRequest authorRequest, HttpServletRequest httpServletRequest) {
+        return authorService.saveAuthor(authorRequest, httpServletRequest);
     }
     @GetMapping("/findAuthorsByPage")
     public Page<AuthorResponse> findAuthorsByPage(
@@ -36,8 +37,9 @@ public class AuthorController {
     @PreAuthorize("hasAnyAuthority('Admin')")
     @PutMapping("/update/{id}")
     public ResponseMessage<AuthorResponse>updateAuthorById(@PathVariable Long id,
-                                                          @RequestBody @Valid AuthorRequest authorRequest){
-        return authorService.updateAuthor(id,authorRequest);
+                                                          @RequestBody @Valid AuthorRequest authorRequest,
+                                                           HttpServletRequest httpServletRequest){
+        return authorService.updateAuthor(id,authorRequest,httpServletRequest);
     }
     @PreAuthorize("hasAnyAuthority('Admin')")
     @DeleteMapping("/delete/{id}")

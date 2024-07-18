@@ -30,10 +30,10 @@ public class UserController {
     }
 
     //1.1 create user with role
-    @PostMapping
+    @PostMapping("/save/{userRole}")
     @PreAuthorize("hasAnyAuthority('Admin')")
-    public ResponseMessage<UserResponse>createUser(@RequestBody @Valid UserRequest userRequest, String userRole){
-        return userService.saveUser(userRequest, userRole);
+    public ResponseMessage<UserResponse>createUser(@RequestBody @Valid UserRequest userRequest, @PathVariable String userRole, HttpServletRequest httpServletRequest){
+        return userService.saveUserByAdmin(userRequest, userRole, httpServletRequest);
     }
 
     @PostMapping("/user")
@@ -43,42 +43,42 @@ public class UserController {
     }
 
     //2. /users -> will  return pageable user
-    @GetMapping("/{userRole}")
+    @GetMapping
     @PreAuthorize("hasAnyAuthority('Admin','Employee')")
     public ResponseEntity<Page<UserResponse>>getAllUsersByPage(
-            @PathVariable String userRole,
             @RequestParam (value = "page", defaultValue = "0") int page,
             @RequestParam (value = "size", defaultValue = "10") int size,
-            @RequestParam (value = "sort", defaultValue = "name") String sort,
-            @RequestParam (value = "type", defaultValue = "desc") String type
+            @RequestParam (value = "sort", defaultValue = "firstName") String sort,
+            @RequestParam (value = "type", defaultValue = "desc") String type,
+            HttpServletRequest httpServletRequest
     ){
-        return ResponseEntity.ok(userService.getAllUsersByPage(page, size, sort, type));
+        return ResponseEntity.ok(userService.getAllUsersByPage(page, size, sort, type,httpServletRequest));
     }
 
     //3. Fetch user via id
-    @GetMapping("/{id}")
+    @GetMapping("/getById/{id}")
     @PreAuthorize("hasAnyAuthority('Admin','Employee')")
-    public ResponseEntity<UserResponse>getUserById(@PathVariable Long id){
-        return ResponseEntity.ok(userService.findUserById(id));
+    public ResponseEntity<UserResponse>getUserById(@PathVariable Long id, HttpServletRequest httpServletRequest){
+        return ResponseEntity.ok(userService.findUserById(id, httpServletRequest));
     }
 
     //4. delete user via id
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAnyAuthority('Admin','Employee')")
-    public ResponseMessage<String>deleteUserById(@PathVariable Long id){
-        return userService.deleteUserById(id);
+    public ResponseMessage<String>deleteUserById(@PathVariable Long id, HttpServletRequest httpServletRequest){
+        return userService.deleteUserById(id, httpServletRequest);
     }
 
     //5. update user via id
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('Admin','Employee')")
-    public ResponseEntity<UserResponse>updateUserById(@RequestBody @Valid UserRequestWithoutPassword userRequest, @PathVariable Long id){
-        return ResponseEntity.ok(userService.updateUserById(userRequest, id));
+    public ResponseEntity<UserResponse>updateUserById(@RequestBody @Valid UserRequestWithoutPassword userRequest, @PathVariable Long id, HttpServletRequest httpServletRequest){
+        return ResponseEntity.ok(userService.updateUserById(userRequest, id, httpServletRequest));
     }
 
     @PreAuthorize("hasAnyAuthority('Admin')")
     @PostMapping("/{id}")
-    public ResponseMessage<UserResponse> AddRole(@PathVariable Long id, @RequestBody @Valid RoleRequest roleRequest) {
-        return userService.addRoleToUser(id, roleRequest.getRoleName());
+    public ResponseMessage<UserResponse> AddRole(@PathVariable Long id, @RequestBody @Valid RoleRequest roleRequest, HttpServletRequest httpServletRequest) {
+        return userService.addRoleToUser(id, roleRequest.getRoleName(), httpServletRequest);
     }
 }

@@ -66,7 +66,7 @@ public class LibraryManagementApplication implements CommandLineRunner {
         userRequest.setBirthDate(LocalDate.of(1990, 1, 1));
         userRequest.setAddress("AdminAddress");
         userRequest.setPhoneNumber("111-111-1111");
-        userRequest.setEmail("admin@gmail.com");
+        userRequest.setEmail("ozkan@gmail.com");
         userRequest.setGender(Gender.MALE);
         userRequest.setBuildIn(true);
         return userRequest;
