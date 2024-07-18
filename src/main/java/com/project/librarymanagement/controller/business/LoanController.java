@@ -9,8 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.hateoas.PagedModel;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +22,8 @@ public class LoanController {
 
     @PreAuthorize("hasAnyAuthority('Admin','Employee')")
     @PostMapping("/save")
-    public ResponseMessage<LoanResponse> createLoan(@RequestBody @Valid LoanRequest loanRequest){
-        return loanService.createLoan(loanRequest);
+    public ResponseMessage<LoanResponse> createLoan(@RequestBody @Valid LoanRequest loanRequest, HttpServletRequest httpServletRequest){
+        return loanService.createLoan(loanRequest, httpServletRequest);
     }
 
     @PreAuthorize("hasAnyAuthority('Member')")
@@ -41,14 +39,14 @@ public class LoanController {
 
     @PreAuthorize("hasAnyAuthority('Member')")
     @GetMapping("/{loanId}")
-    public ResponseMessage<LoanResponse> getLoanById(@PathVariable Long loanId, HttpServletRequest httpServletRequest){
-        return loanService.getLoanById(loanId, httpServletRequest);
+    public ResponseMessage<LoanResponse> getLoanByIdForMember(@PathVariable Long loanId, HttpServletRequest httpServletRequest){
+        return loanService.getLoanByIdForMember(loanId, httpServletRequest);
     }
 
     @PreAuthorize("hasAnyAuthority('Admin','Employee')")
     @PutMapping("/{id}")
-    public ResponseMessage<LoanResponse> updateLoan(@RequestBody @Valid LoanUpdateRequest loanUpdateRequest, @PathVariable Long id){
-        return loanService.updateLoan(loanUpdateRequest, id);
+    public ResponseMessage<LoanResponse> updateLoan(@RequestBody @Valid LoanUpdateRequest loanUpdateRequest, @PathVariable Long id, HttpServletRequest httpServletRequest){
+        return loanService.updateLoan(loanUpdateRequest, id, httpServletRequest);
     }
 
     @PreAuthorize("hasAnyAuthority('Admin','Employee')")
@@ -58,8 +56,9 @@ public class LoanController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "sort", defaultValue = "loanDate") String sort,
-            @RequestParam(value = "type", defaultValue = "desc") String type){
-        return loanService.getLoansByUserId(userId, page, size, sort, type);
+            @RequestParam(value = "type", defaultValue = "desc") String type,
+            HttpServletRequest httpServletRequest){
+        return loanService.getLoansByUserId(userId, page, size, sort, type, httpServletRequest);
     }
 
     @PreAuthorize("hasAnyAuthority('Admin','Employee')")
@@ -69,13 +68,14 @@ public class LoanController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "sort", defaultValue = "loanDate") String sort,
-            @RequestParam(value = "type", defaultValue = "desc") String type){
-        return loanService.getLoansByBookId(bookId, page, size, sort, type);
+            @RequestParam(value = "type", defaultValue = "desc") String type,
+            HttpServletRequest httpServletRequest){
+        return loanService.getLoansByBookId(bookId, page, size, sort, type, httpServletRequest);
     }
 
     @PreAuthorize("hasAnyAuthority('Admin','Employee')")
     @GetMapping("/auth/{loanId}")
-    public ResponseEntity<LoanResponse> getLoanById(@PathVariable Long loanId){
-        return ResponseEntity.ok(loanService.getById(loanId));
+    public ResponseEntity<LoanResponse> getLoanById(@PathVariable Long loanId, HttpServletRequest httpServletRequest){
+        return ResponseEntity.ok(loanService.getById(loanId, httpServletRequest));
     }
 }

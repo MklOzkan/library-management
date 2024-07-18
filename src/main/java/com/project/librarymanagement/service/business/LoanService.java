@@ -41,7 +41,10 @@ public class LoanService {
     private final PageableHelper pageableHelper;
     private final UserRepository userRepository;
 
-    public ResponseMessage<LoanResponse> createLoan(LoanRequest loanRequest) {
+    public ResponseMessage<LoanResponse> createLoan(LoanRequest loanRequest, HttpServletRequest httpServletRequest) {
+        String email = (String) httpServletRequest.getAttribute("email");
+        User authenticatedUser = methodHelper.loadUserByEmail(email);
+        methodHelper.isRoleAdminOrEmployee(authenticatedUser);
         User user = methodHelper.findUserById(loanRequest.getUser().getId());//check if user exits then get user
 
         checkIfUserHasAlreadyBorrowedBook(user.getId());//check if user has already borrowed a book
@@ -122,6 +125,8 @@ public class LoanService {
         //Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
         String email = (String) httpServletRequest.getAttribute("email");
         User user = methodHelper.loadUserByEmail(email);
+        //check if user is a Member
+        methodHelper.isRoleMember(user);
 
         Sort.Direction direction = type.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort));
@@ -130,9 +135,11 @@ public class LoanService {
 
     }
 
-    public ResponseMessage<LoanResponse> getLoanById(Long loanId, HttpServletRequest httpServletRequest) {
+    public ResponseMessage<LoanResponse> getLoanByIdForMember(Long loanId, HttpServletRequest httpServletRequest) {
         String email = (String) httpServletRequest.getAttribute("email");
         User user = methodHelper.loadUserByEmail(email);
+        //check if user is a Member
+        methodHelper.isRoleMember(user);
         Loan loan = methodHelper.findLoanById(loanId);
         if(!loan.getUser().getId().equals(user.getId())){
             throw new BadRequestException("You are not authorized to see this loan");
@@ -143,7 +150,11 @@ public class LoanService {
                 .build();
     }
 
-    public ResponseMessage<LoanResponse> updateLoan(LoanUpdateRequest loanUpdateRequest, Long id) {
+    public ResponseMessage<LoanResponse> updateLoan(LoanUpdateRequest loanUpdateRequest, Long id, HttpServletRequest httpServletRequest) {
+        String email = (String) httpServletRequest.getAttribute("email");
+        User authenticatedUser = methodHelper.loadUserByEmail(email);
+        //check if user is an Admin or Employee
+        methodHelper.isRoleAdminOrEmployee(authenticatedUser);
         Loan loan = methodHelper.findLoanById(id);
         User user = methodHelper.findUserById(loan.getUser().getId());
         LocalDateTime returnDate = LocalDateTime.now();
@@ -181,21 +192,33 @@ public class LoanService {
         return returnDate.isBefore(expireDate);
     }
 
-    public Page<LoanResponse> getLoansByUserId(Long userId, int page, int size, String sort, String type) {
+    public Page<LoanResponse> getLoansByUserId(Long userId, int page, int size, String sort, String type, HttpServletRequest httpServletRequest) {
+        String email = (String) httpServletRequest.getAttribute("email");
+        User authenticatedUser = methodHelper.loadUserByEmail(email);
+        //check if user is an Admin or Employee
+        methodHelper.isRoleAdminOrEmployee(authenticatedUser);
         Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
         User user = methodHelper.findUserById(userId);
         return loanRepository.findByUserId(user.getId(), pageable)
                 .map(loanMapper::mapLoanToLoanResponseForAdminAndEmployee);
     }
 
-    public Page<LoanResponse> getLoansByBookId(Long bookId, int page, int size, String sort, String type) {
+    public Page<LoanResponse> getLoansByBookId(Long bookId, int page, int size, String sort, String type, HttpServletRequest httpServletRequest) {
+        String email = (String) httpServletRequest.getAttribute("email");
+        User authenticatedUser = methodHelper.loadUserByEmail(email);
+        //check if user is an Admin or Employee
+        methodHelper.isRoleAdminOrEmployee(authenticatedUser);
         Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
         Book book = methodHelper.isBookExist(bookId);
         return loanRepository.findByBookId(book.getId(), pageable)
                 .map(loanMapper::mapLoanToLoanResponseForAdminAndEmployee);
     }
 
-    public LoanResponse getById(Long loanId) {
+    public LoanResponse getById(Long loanId, HttpServletRequest httpServletRequest) {
+        String email = (String) httpServletRequest.getAttribute("email");
+        User authenticatedUser = methodHelper.loadUserByEmail(email);
+        //check if user is an Admin or Employee
+        methodHelper.isRoleAdminOrEmployee(authenticatedUser);
         Loan loan = methodHelper.findLoanById(loanId);
         return loanMapper.mapLoanToLoanResponseForAdminAndEmployee(loan);
     }
