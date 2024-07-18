@@ -43,9 +43,9 @@ public class AuthorController {
     }
     @PreAuthorize("hasAnyAuthority('Admin')")
     @DeleteMapping("/delete/{id}")
-    public ResponseMessage deleteAuthorById(@PathVariable Long id) {
+    public ResponseMessage deleteAuthorById(@PathVariable Long id, HttpServletRequest httpServletRequest) {
 
-        return authorService.deleteAuthorById(id);
+        return authorService.deleteAuthorById(id, httpServletRequest);
     }
     @GetMapping("/{id}")
     public AuthorResponse getAuthorById(@PathVariable Long id){
