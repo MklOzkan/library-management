@@ -163,4 +163,9 @@ public Author isAuthorExist(Long id){
             throw new BadRequestException(ErrorMessages.NOT_AUTHORIZED_MESSAGE);
         }
     }
+
+    public Category getCategoryById(Long id) {
+        return categoryRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException(String.format(ErrorMessages.NOT_FOUND_CATEGORY_MESSAGE, id)));
+    }
 }

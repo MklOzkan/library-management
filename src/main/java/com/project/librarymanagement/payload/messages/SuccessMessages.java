@@ -39,6 +39,13 @@ public class SuccessMessages {
 
     public static final String USER_DELETE = "User is Deleted Successfully";
 
+    //Category
+    public static final String CATEGORY_SAVE = "Category is Saved Successfully";
+
+    public static final String CATEGORY_UPDATE = "Category is Updated Successfully";
+
+    public static final String CATEGORY_DELETE = "Category is Deleted Successfully";
+
 
 
 }
