@@ -81,7 +81,11 @@ public class AuthorService {
     }
 
 
-    public ResponseMessage deleteAuthorById(Long id) {
+    public ResponseMessage deleteAuthorById(Long id, HttpServletRequest httpServletRequest) {
+        String email = (String) httpServletRequest.getAttribute("email");
+        User authenticatedUser = methodHelper.loadUserByEmail(email);
+        //check if user is an Admin
+        methodHelper.isRoleAdmin(authenticatedUser);
         methodHelper.isAuthorExist(id);
         authorRepository.deleteById(id);
         return ResponseMessage.builder()
