@@ -4,6 +4,7 @@ import com.project.librarymanagement.payload.request.business.PublisherRequest;
 import com.project.librarymanagement.payload.response.business.PublisherResponse;
 import com.project.librarymanagement.payload.response.business.ResponseMessage;
 import com.project.librarymanagement.service.business.PublisherService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,18 +37,20 @@ public class PublisherController {
 
     @PreAuthorize("hasAnyAuthority('Admin')")
     @PostMapping
-    public ResponseMessage<PublisherResponse> createPublisher(@RequestBody @Valid PublisherRequest publisherRequest) {
-        return publisherService.createPublisher(publisherRequest);
+    public ResponseMessage<PublisherResponse> createPublisher(@RequestBody @Valid PublisherRequest publisherRequest, HttpServletRequest httpServletRequest) {
+        return publisherService.createPublisher(publisherRequest, httpServletRequest);
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @PutMapping ("/{id}")
-    public ResponseMessage<PublisherResponse> updatePublisher(@PathVariable Long id, @RequestBody @Valid PublisherRequest publisherRequest) {
-        return publisherService.updatePublisher(id, publisherRequest);
+    public ResponseMessage<PublisherResponse> updatePublisher(@PathVariable Long id, @RequestBody @Valid PublisherRequest publisherRequest, HttpServletRequest httpServletRequest) {
+        return publisherService.updatePublisher(id, publisherRequest, httpServletRequest);
     }
 
+    @PreAuthorize("hasAnyAuthority('Admin')")
     @DeleteMapping ("/{id}")
-    public ResponseMessage<PublisherResponse> deletePublisherById(@PathVariable @Valid Long id) {
-        return publisherService.deletePublisher(id);
+    public ResponseMessage<PublisherResponse> deletePublisherById(@PathVariable @Valid Long id, HttpServletRequest httpServletRequest) {
+        return publisherService.deletePublisher(id, httpServletRequest);
     }
 
 }

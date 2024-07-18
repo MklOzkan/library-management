@@ -1,6 +1,7 @@
 package com.project.librarymanagement.service.business;
 
 import com.project.librarymanagement.entity.business.Publisher;
+import com.project.librarymanagement.entity.user.User;
 import com.project.librarymanagement.payload.mapper.PublisherMapper;
 import com.project.librarymanagement.payload.messages.SuccessMessages;
 import com.project.librarymanagement.payload.request.business.PublisherRequest;
@@ -9,6 +10,7 @@ import com.project.librarymanagement.payload.response.business.ResponseMessage;
 import com.project.librarymanagement.repository.business.PublisherRepository;
 import com.project.librarymanagement.service.helper.MethodHelper;
 import com.project.librarymanagement.service.helper.PageableHelper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +36,11 @@ public class PublisherService {
         return publisherRepository.findAll(pageable).map(publisherMapper::mapPublisherToPublisherResponse);
     }
 
-    public ResponseMessage<PublisherResponse> createPublisher(PublisherRequest publisherRequest) {
+    public ResponseMessage<PublisherResponse> createPublisher(PublisherRequest publisherRequest, HttpServletRequest httpServletRequest) {
+        String email = httpServletRequest.getAttribute("email").toString();
+        User authenticatedUser = methodHelper.loadUserByEmail(email);
+        //check if user is an Admin
+        methodHelper.isRoleAdmin(authenticatedUser);
         methodHelper.isPublisherExistByName(publisherRequest.getName());
         Publisher publisher = publisherMapper.mapPublisherRequestToPublisher(publisherRequest);
         Publisher savedPublisher = publisherRepository.save(publisher);
@@ -52,7 +58,11 @@ public class PublisherService {
                 .build();
     }
 
-    public ResponseMessage<PublisherResponse> updatePublisher(Long id, PublisherRequest publisherRequest) {
+    public ResponseMessage<PublisherResponse> updatePublisher(Long id, PublisherRequest publisherRequest, HttpServletRequest httpServletRequest) {
+        String email = httpServletRequest.getAttribute("email").toString();
+        User authenticatedUser = methodHelper.loadUserByEmail(email);
+        //check if user is an Admin
+        methodHelper.isRoleAdmin(authenticatedUser);
         Publisher publisher = methodHelper.getPublisherById(id);
         publisher.setName(publisherRequest.getName());
         Publisher updatedPublisher = publisherRepository.save(publisher);
@@ -62,7 +72,11 @@ public class PublisherService {
                 .build();
     }
 
-    public ResponseMessage<PublisherResponse> deletePublisher(Long id) {
+    public ResponseMessage<PublisherResponse> deletePublisher(Long id, HttpServletRequest httpServletRequest) {
+        String email = httpServletRequest.getAttribute("email").toString();
+        User authenticatedUser = methodHelper.loadUserByEmail(email);
+        //check if user is an Admin
+        methodHelper.isRoleAdmin(authenticatedUser);
         Publisher publisher = methodHelper.getPublisherById(id);
         publisherRepository.deleteById(id);
         return ResponseMessage.<PublisherResponse>builder()
