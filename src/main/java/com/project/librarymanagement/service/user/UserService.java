@@ -67,17 +67,26 @@ public class UserService {
         return userMapper.mapUserToUserResponse(savedUser);
     }
 
-    public Page<UserResponse> getAllUsersByPage(int page, int size, String sort, String type) {
+    public Page<UserResponse> getAllUsersByPage(int page, int size, String sort, String type, HttpServletRequest httpServletRequest) {
+        String email = (String) httpServletRequest.getAttribute("email");
+        User authenticatedUser = methodHelper.loadUserByEmail(email);
+        methodHelper.isRoleAdminOrEmployee(authenticatedUser);
         Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
         return userRepository.findAll(pageable).map(userMapper::mapUserToUserResponse);
     }
 
-    public UserResponse findUserById(Long id) {
+    public UserResponse findUserById(Long id, HttpServletRequest httpServletRequest) {
+        String email = (String) httpServletRequest.getAttribute("email");
+        User authenticatedUser = methodHelper.loadUserByEmail(email);
+        methodHelper.isRoleAdminOrEmployee(authenticatedUser);
         User user = fetchUserById(id);
         return userMapper.mapUserToUserResponse(user);
     }
 
-    public ResponseMessage<String> deleteUserById(Long id) {
+    public ResponseMessage<String> deleteUserById(Long id, HttpServletRequest httpServletRequest) {
+        String email = (String) httpServletRequest.getAttribute("email");
+        User authenticatedUser = methodHelper.loadUserByEmail(email);
+        methodHelper.isRoleAdminOrEmployee(authenticatedUser);
         User user = fetchUserById(id);
         userRepository.deleteById(id); //using this for better performance
         return ResponseMessage.<String>builder()
@@ -92,7 +101,10 @@ public class UserService {
         );
     }
 
-    public UserResponse updateUserById(UserRequestWithoutPassword userRequest, Long id) {
+    public UserResponse updateUserById(UserRequestWithoutPassword userRequest, Long id, HttpServletRequest httpServletRequest) {
+        String email = (String) httpServletRequest.getAttribute("email");
+        User authenticatedUser = methodHelper.loadUserByEmail(email);
+        methodHelper.isRoleAdminOrEmployee(authenticatedUser);
         User user = fetchUserById(id);
         methodHelper.checkBuildIn(user);
         uniquePropertyValidator.checkUniqueProperties(user, userRequest);
@@ -117,7 +129,10 @@ public class UserService {
         return userMapper.mapUserToUserResponse(user);
     }
 
-    public ResponseMessage<UserResponse> addRoleToUser(Long userId, String roleName) {
+    public ResponseMessage<UserResponse> addRoleToUser(Long userId, String roleName, HttpServletRequest httpServletRequest) {
+        String email = (String) httpServletRequest.getAttribute("email");
+        User authenticatedUser = methodHelper.loadUserByEmail(email);
+        methodHelper.isRoleAdminOrEmployee(authenticatedUser);
         User user = methodHelper.findUserById(userId);
         List<Role> roles = user.getRoles().stream().toList();
         checkRoleCount(roles);
@@ -146,5 +161,25 @@ public class UserService {
         if (roles.size() > 2) {
             throw new ConflictException(ErrorMessages.CANNOT_HAVE_MORE_THAN_TWO_ROLE_MESSAGE);
         }
+    }
+
+    public ResponseMessage<UserResponse> saveUserByAdmin(UserRequest userRequest, String userRole, HttpServletRequest httpServletRequest) {
+        String email = (String) httpServletRequest.getAttribute("email");
+        User authenticatedUser = methodHelper.loadUserByEmail(email);
+        //checks the activeRole, if it is not Admin then it throws an exception
+        methodHelper.isRoleAdmin(authenticatedUser);
+        //checks the role, if it is Member than it throws an exception
+        methodHelper.checkIfRoleMember(userRole);
+        //checks the user is email and phone number unique
+        uniquePropertyValidator.checkDuplicate(userRequest.getPhoneNumber(), userRequest.getEmail());
+        //maps the DTO to entity
+        User user = userMapper.mapUserRequestToUser(userRequest, userRole);
+        //saves the user
+        User savedUser = userRepository.save(user);
+        //maps the entity to DTO and returns it
+        return ResponseMessage.<UserResponse>builder()
+                .message(SuccessMessages.USER_SAVE)
+                .returnBody(userMapper.mapUserToUserResponse(savedUser))
+                .build();
     }
 }

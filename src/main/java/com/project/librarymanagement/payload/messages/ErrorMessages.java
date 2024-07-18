@@ -33,4 +33,6 @@ public class ErrorMessages {
     public static final String CANNOT_HAVE_MORE_THAN_TWO_ROLE_MESSAGE = "Error: User with id %s cannot have more than two roles";
 
     public static final String MANAGER_CANNOT_HAVE_ANOTHER_MANAGER_ROLE_MESSAGE = "Error: Admin cannot have Employee role or Employee cannot have Admin role";
+
+    public static final String NOT_AUTHORIZED_MESSAGE = "Error: You are not authorized to do this operation";
 }
