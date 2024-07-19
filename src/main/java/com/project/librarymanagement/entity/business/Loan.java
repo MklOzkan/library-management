@@ -1,5 +1,7 @@
 package com.project.librarymanagement.entity.business;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import com.project.librarymanagement.entity.user.User;
@@ -17,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties({"user"})
 public class Loan {
 
         @Id
@@ -31,7 +34,8 @@ public class Loan {
         private Boolean active;
         private String notes;
 
-        @OneToMany(mappedBy = "loan", fetch = FetchType.EAGER)
+        @ManyToMany(mappedBy = "loans", fetch = FetchType.EAGER)
+        @JsonIgnore
         private List<Book> books;
 
         @PrePersist

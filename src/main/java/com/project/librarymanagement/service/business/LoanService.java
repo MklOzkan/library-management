@@ -58,7 +58,7 @@ public class LoanService {
         Loan savedLoan = loanRepository.save(loan);//save loan
         for (Book book: books){//set books loanable to false
             book.setLoanable(false);
-            book.setLoan(loan);
+            book.getLoans().add(savedLoan);
             book.setRentalAmount(book.getRentalAmount()+1);
             bookRepository.save(book);
         }

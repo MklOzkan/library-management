@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "books")
@@ -46,9 +47,12 @@ public class Book {
     private Boolean builtIn;
     private int rentalAmount;
 
-    @ManyToOne
-    @JoinColumn(name = "loanId")
-    private Loan loan;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "book_loan",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "loan_id"))
+    private List<Loan> loans;
 
     @PrePersist
     public void prePersist() {

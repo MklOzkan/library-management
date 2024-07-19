@@ -35,4 +35,6 @@ public class ErrorMessages {
     public static final String MANAGER_CANNOT_HAVE_ANOTHER_MANAGER_ROLE_MESSAGE = "Error: Admin cannot have Employee role or Employee cannot have Admin role";
 
     public static final String NOT_AUTHORIZED_MESSAGE = "Error: You are not authorized to do this operation";
+    public static final String CANNOT_ADD_EMPLOYEE_ROLE_TO_ADMIN_MESSAGE = "Error: Admin cannot have Employee role";
+    public static final String CANNOT_ADD_ADMIN_ROLE_TO_EMPLOYEE_MESSAGE = "Error: Employee cannot have Admin role";
 }
