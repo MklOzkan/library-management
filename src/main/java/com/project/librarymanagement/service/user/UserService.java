@@ -130,29 +130,38 @@ public class UserService {
     }
 
     public ResponseMessage<UserResponse> addRoleToUser(Long userId, String roleName, HttpServletRequest httpServletRequest) {
-        String email = (String) httpServletRequest.getAttribute("email");
+        String email = (String) httpServletRequest.getAttribute("email");//get email from token
+        //load user by email
         User authenticatedUser = methodHelper.loadUserByEmail(email);
+        //check if user is Admin or Employee
         methodHelper.isRoleAdminOrEmployee(authenticatedUser);
+        //find user by given id
         User user = methodHelper.findUserById(userId);
+        //fetch roles of user
         List<Role> roles = user.getRoles().stream().toList();
+        //check if user has more than 2 roles
         checkRoleCount(roles, user.getId());
+        //get the role of user
         Role userRole = roles.get(0);
+        //find the role by given roleName
         Role role = methodHelper.findRoleByName(roleName);
-
+        //check if the role is already exist
         if(roles.contains(role)){
             throw new ConflictException(String.format(ErrorMessages.ALREADY_EXIST_ROLE_MESSAGE, role.getRoleName()));
         }
-
+        //check if the user is Admin and the role is Employee
         if (userRole.getRoleName().equals("Admin")&&role.getRoleName().equals("Employee")) {
             throw new ConflictException(ErrorMessages.CANNOT_ADD_EMPLOYEE_ROLE_TO_ADMIN_MESSAGE);
         }
+        //check if the user is Employee and the role is Admin
         if (userRole.getRoleName().equals("Employee")&&role.getRoleName().equals("Admin")) {
             throw new ConflictException(ErrorMessages.CANNOT_ADD_ADMIN_ROLE_TO_EMPLOYEE_MESSAGE);
         }
-
+        //add the role to user
         user.getRoles().add(role);
+        //save the user
         userRepository.save(user);
-
+        //return the response
         return ResponseMessage.<UserResponse>builder()
                 .message(SuccessMessages.ROLE_SAVE)
                 .returnBody(userMapper.mapUserToUserResponse(user))
