@@ -135,7 +135,7 @@ public class UserService {
         methodHelper.isRoleAdminOrEmployee(authenticatedUser);
         User user = methodHelper.findUserById(userId);
         List<Role> roles = user.getRoles().stream().toList();
-        checkRoleCount(roles);
+        checkRoleCount(roles, user.getId());
         Role userRole = roles.get(0);
         Role role = methodHelper.findRoleByName(roleName);
 
@@ -143,9 +143,11 @@ public class UserService {
             throw new ConflictException(String.format(ErrorMessages.ALREADY_EXIST_ROLE_MESSAGE, role.getRoleName()));
         }
 
-        if (userRole.getRoleName().equals("Admin")&&role.getRoleName().equals("Employee")||
-                userRole.getRoleName().equals("Employee")&&role.getRoleName().equals("Admin")) {
-            throw new ConflictException(ErrorMessages.MANAGER_CANNOT_HAVE_ANOTHER_MANAGER_ROLE_MESSAGE);
+        if (userRole.getRoleName().equals("Admin")&&role.getRoleName().equals("Employee")) {
+            throw new ConflictException(ErrorMessages.CANNOT_ADD_EMPLOYEE_ROLE_TO_ADMIN_MESSAGE);
+        }
+        if (userRole.getRoleName().equals("Employee")&&role.getRoleName().equals("Admin")) {
+            throw new ConflictException(ErrorMessages.CANNOT_ADD_ADMIN_ROLE_TO_EMPLOYEE_MESSAGE);
         }
 
         user.getRoles().add(role);
@@ -157,9 +159,9 @@ public class UserService {
                 .build();
     }
 
-    private void checkRoleCount(List<Role> roles) {
-        if (roles.size() > 2) {
-            throw new ConflictException(ErrorMessages.CANNOT_HAVE_MORE_THAN_TWO_ROLE_MESSAGE);
+    private void checkRoleCount(List<Role> roles, Long userId) {
+        if (roles.size() > 1) {
+            throw new ConflictException(String.format(ErrorMessages.CANNOT_HAVE_MORE_THAN_TWO_ROLE_MESSAGE, userId));
         }
     }
 
