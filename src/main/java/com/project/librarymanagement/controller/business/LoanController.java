@@ -75,7 +75,7 @@ public class LoanController {
 
     @PreAuthorize("hasAnyAuthority('Admin','Employee')")
     @GetMapping("/auth/{loanId}")
-    public ResponseEntity<LoanResponse> getLoanById(@PathVariable Long loanId, HttpServletRequest httpServletRequest){
+    public ResponseEntity<LoanResponse> getLoanByUserId(@PathVariable Long loanId, HttpServletRequest httpServletRequest){
         return ResponseEntity.ok(loanService.getById(loanId, httpServletRequest));
     }
 }
