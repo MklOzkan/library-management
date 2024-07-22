@@ -93,7 +93,19 @@ public class WebSecurityConfig {
             "/js/**",
             "/contactMessages/save",
             "/auth/login",
-            "/users/register"
+            "/users/register",
+            "/authors/findAuthorsByPage",
+            "/authors/{id}",
+            "/publishers/findPublishersByPage",
+            "/publishers/{id}",
+            "/categories",
+            "/categories/{id}",
+            "/books/findBookByPage",
+            "/books/getById/{id}",
+            "/books/findBooksByCategory",
+            "/books/findBooksByAuthor",
+            "/books/findBooksByPublisher",
+
     };
 
 }
